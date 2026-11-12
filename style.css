@@ -1,0 +1,55 @@
+:root{--bg:#0B0B0F;--card:#19191F;--red:#E50914;--muted:#A8A8B3;--line:#2c2c36}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:#fff;font-family:system-ui,sans-serif}
+#app{max-width:520px;height:100vh;height:100dvh;margin:0 auto;display:flex;flex-direction:column;position:relative}
+.screen{flex:1;overflow-y:auto;padding-bottom:16px}
+button{font-family:inherit;color:inherit;cursor:pointer}
+@keyframes pop{0%{opacity:0;transform:scale(.86)}100%{opacity:1;transform:scale(1)}}
+.splash{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:radial-gradient(circle at 50% 45%,#3a0509,#0B0B0F 62%)}
+.logo{font-size:32px;font-weight:800;letter-spacing:3px;color:var(--red);animation:pop 1.4s both}
+.logo small{display:block;font-size:20px;letter-spacing:12px;color:#fff;text-align:center}
+.muted{color:var(--muted);font-size:13px}
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px}
+.brand{font-weight:800;font-size:19px;color:var(--red)}
+.brand span{color:#fff}
+.iconbtn{width:44px;height:44px;background:none;border:0;font-size:20px}
+.hero{margin:8px 16px 0;height:280px;border-radius:16px;position:relative;overflow:hidden;display:flex;align-items:flex-end}
+.hero .shade{position:absolute;inset:0;background:linear-gradient(180deg,transparent 30%,rgba(11,11,15,.92))}
+.hero .info{position:relative;padding:16px;display:flex;flex-direction:column;gap:8px}
+.hero h1{margin:0;font-size:26px}
+.tag{font-size:12px;font-weight:700;color:var(--red)}
+.btn{height:44px;padding:0 22px;border:0;border-radius:10px;background:var(--red);color:#fff;font-size:15px;font-weight:700}
+.btn.ghost{background:none;border:1px solid var(--red)}
+.chips,.row{display:flex;gap:10px;overflow-x:auto;padding:0 16px;scrollbar-width:none}
+.chips{padding-top:16px}
+.chip{flex:none;height:40px;padding:0 16px;border-radius:20px;border:1px solid var(--line);background:var(--card);font-size:14px}
+.chip.on{background:var(--red);border-color:var(--red)}
+.section{margin-top:22px}
+.section h2{margin:0;padding:0 16px 10px;font-size:17px}
+.poster{flex:none;width:120px;text-align:right;background:none;border:0;padding:0}
+.poster .img{height:176px;border-radius:12px;position:relative;display:flex;align-items:flex-end;padding:8px;font-size:13px;font-weight:700;line-height:1.3}
+.badge{position:absolute;top:8px;left:8px;padding:2px 8px;border-radius:6px;background:rgba(11,11,15,.8);font-size:12px}
+.poster .meta{margin-top:6px;color:var(--muted);font-size:12px}
+.vcard{flex:none;width:200px;text-align:right;background:none;border:0;padding:0}
+.vcard .thumb{height:112px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:22px}
+.vcard b{display:block;margin-top:6px;font-size:13px;line-height:1.4}
+.nav{flex:none;height:64px;display:flex;background:var(--card);border-top:1px solid var(--line)}
+.nav button{flex:1;background:none;border:0;color:var(--muted);font-size:11px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px}
+.nav button i{font-style:normal;font-size:20px}
+.nav button.on{color:var(--red)}
+.pad{padding:16px}
+.pad h1{margin:0 0 14px;font-size:24px}
+.item{display:flex;gap:12px;align-items:center;width:100%;padding:10px;margin-bottom:10px;border:0;border-radius:14px;background:var(--card);text-align:right}
+.item .img{flex:none;width:56px;height:80px;border-radius:8px}
+.item div{flex:1}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tile{height:84px;border-radius:14px;border:0;font-size:17px;font-weight:700;text-align:right;padding:0 16px}
+.input{width:100%;height:48px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:#fff;padding:0 14px;font-family:inherit;font-size:16px}
+.cover{height:260px;position:relative}
+.cover .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,11,15,.35),transparent 35%,var(--bg))}
+.back{position:absolute;top:12px;right:12px;width:44px;height:44px;border-radius:50%;border:0;background:rgba(11,11,15,.7);font-size:20px}
+.favbtn{right:auto;left:12px}
+.review{margin-top:20px;padding:16px;border-radius:16px;background:var(--card);border:1px solid var(--line)}
+.score{font-size:34px;font-weight:800;color:var(--red)}
+.player{height:219px;display:flex;align-items:center;justify-content:center;background:#000}
+.card{padding:16px;border-radius:14px;background:var(--card);margin-bottom:10px}
