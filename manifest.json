@@ -1,0 +1,21 @@
+{
+  "name": "Movie Recaps Hub",
+  "short_name": "Recaps Hub",
+  "description": "ملخصات الأفلام في مكان واحد",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "lang": "ar",
+  "dir": "rtl",
+  "background_color": "#0B0B0F",
+  "theme_color": "#E50914",
+  "icons": [
+    {
+      "src": "icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
