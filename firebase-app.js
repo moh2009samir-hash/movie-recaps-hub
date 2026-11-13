@@ -15,23 +15,33 @@ const db = getFirestore(app);
 
 async function loadMoviesFromFirebase() {
     try {
-        // بنقرا من مجموعة "movies" أو "أفلام" حسب اللي أنت حفظت بيه
         let querySnapshot = await getDocs(collection(db, "movies"));
         if (querySnapshot.empty) {
             querySnapshot = await getDocs(collection(db, "أفلام"));
         }
         
         let newMovies = [];
+        let index = 1; 
+        
         querySnapshot.forEach((doc) => {
             const data = doc.data();
+            
+            // استخراج رقم الفيديو من الرابط بتاع اليوتيوب
+            let ytUrl = data.youtubeLink || data['رابط يوتيوب'] || "";
+            let ytId = ytUrl;
+            if(ytUrl.includes("youtu.be/")) {
+                ytId = ytUrl.split("youtu.be/")[1].split("?")[0];
+            } else if(ytUrl.includes("v=")) {
+                ytId = ytUrl.split("v=")[1].split("&")[0];
+            }
+
             newMovies.push({
-                id: doc.id,
-                // بنقرا الاسم الإنجليزي أو العربي
+                id: index++, // إعطاء رقم تسلسلي للتطبيق
                 title: data.title || data['عنوان'] || "بدون عنوان",
                 year: data.year || data['سنة'] || "2024",
-                rating: data.supervisorRating || data['تقييم المشرف'] || 0,
+                rating: Number(data.supervisorRating || data['تقييم المشرف'] || 0),
                 cat: data.genres || data['الأنواع'] || "عام",
-                vid: data.youtubeLink || data['رابط يوتيوب'] || "",
+                vid: ytId, // رقم الفيديو فقط
                 desc: data.supervisorOpinion || data['رأي المشرف'] || data.synopsis || data['ملخص الفيلم'] || "",
                 bg: "linear-gradient(45deg, #19191F, #E50914)"
             });
