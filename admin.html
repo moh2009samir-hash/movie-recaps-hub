@@ -16,6 +16,11 @@
             width: 100%; padding: 15px; background: #E50914; color: white; 
             border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 15px;
         }
+        .copy-container { display: flex; gap: 10px; margin: 8px 0; align-items: center;}
+        .copy-container input { margin: 0; flex: 1; }
+        .copy-btn {
+            width: 80px; margin: 0 !important; background: #333; padding: 12px; font-size: 16px; border-radius: 8px; color: white; border: none; cursor: pointer;
+        }
     </style>
 </head>
 <body style="background-color: #0B0B0F;">
@@ -32,11 +37,28 @@
         
         <input type="number" id="supervisorRating" placeholder="تقييم المشرف من 10" min="0" max="10" step="0.1">
         
-        <input type="url" id="youtubeLink" placeholder="رابط فيديو اليوتيوب (https://youtube.com/...)">
+        <div class="copy-container">
+            <input type="url" id="youtubeLink" placeholder="رابط فيديو اليوتيوب (https://youtube.com/...)">
+            <button type="button" class="copy-btn" onclick="copyLink()">نسخ</button>
+        </div>
         
         <button onclick="saveMovie()">حفظ الفيلم</button>
     </div>
 
+    <script>
+        window.copyLink = function() {
+            const linkInput = document.getElementById('youtubeLink');
+            if(!linkInput.value) {
+                alert("اكتب رابط الأول عشان تنسخه!");
+                return;
+            }
+            navigator.clipboard.writeText(linkInput.value).then(() => {
+                alert("تم نسخ الرابط بنجاح! 📋");
+            }).catch(err => {
+                alert("مش عارف أنسخ، جرب تنسخ يدوي.");
+            });
+        }
+    </script>
     <script type="module" src="admin.js"></script>
 </body>
 </html>
