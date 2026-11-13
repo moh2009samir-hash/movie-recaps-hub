@@ -35,13 +35,6 @@ async function loadMoviesFromFirebase() {
                 ytId = ytUrl.split("v=")[1].split("&")[0];
             }
 
-            // بنخلي التطبيق يفتكر إن فيه فيديوهات مرتبطة بالفيلم ده
-            let videoArray = [{
-                vid: ytId, 
-                c_name: "المشرف", 
-                v_title: "ملخص الفيلم"
-            }];
-
             newMovies.push({
                 id: index++,
                 title: data.title || data['عنوان'] || "بدون عنوان",
@@ -49,7 +42,6 @@ async function loadMoviesFromFirebase() {
                 rating: Number(data.supervisorRating || data['تقييم المشرف'] || 0),
                 cat: data.genres || data['الأنواع'] || "عام",
                 vid: ytId,
-                vids: videoArray, // السطر ده اللي هيخلي زرار التشغيل يشتغل
                 desc: data.supervisorOpinion || data['رأي المشرف'] || data.synopsis || data['ملخص الفيلم'] || "",
                 date: data.year || data['سنة'] || "2024",
                 channel: "المشرف",
@@ -58,29 +50,27 @@ async function loadMoviesFromFirebase() {
         });
 
         if (newMovies.length > 0) {
-            if (typeof window.MOVIES !== 'undefined') {
-                window.MOVIES.length = 0; 
-                window.MOVIES.push(...newMovies); 
-            }
+            // نحدث قايمة الأفلام بتاعتنا
+            window.MOVIES = newMovies;
+
+            // السر كله هنا: بنجبر التطبيق يستخدم روابط اليوتيوب الحقيقية بدل الوهمية
+            window.vids = function() {
+                let allVids = [];
+                window.MOVIES.forEach(m => {
+                    allVids.push({
+                        id: m.id + '-0',
+                        mid: m.id, // ربط الفيديو بالفيلم
+                        title: 'ملخص فيلم ' + m.title,
+                        ch: m.channel,
+                        date: m.date,
+                        vid: m.vid // رقم اليوتيوب الحقيقي
+                    });
+                });
+                return allVids;
+            };
+
             if (typeof window.render === 'function') window.render();
             if (typeof window.go === 'function') window.go('home');
-            
-            // السطور دي عشان نرغم التطبيق يعرض مشغل اليوتيوب بدل الشاشة السودة
-            setTimeout(() => {
-                const playerDiv = document.getElementById('player-area') || document.querySelector('.video-container') || document.querySelector('.player');
-                if(playerDiv && !playerDiv.innerHTML.includes('iframe')) {
-                    const currentMovieId = window.S?.sel || 1;
-                    const currentMovie = newMovies.find(m => m.id == currentMovieId);
-                    if(currentMovie && currentMovie.vid) {
-                        playerDiv.innerHTML = `
-                            <iframe width="100%" height="100%" 
-                                src="https://www.youtube.com/embed/${currentMovie.vid}?autoplay=1" 
-                                frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                                allowfullscreen style="border-radius: 8px; min-height: 250px;">
-                            </iframe>`;
-                    }
-                }
-            }, 1000);
         }
     } catch (error) {
         console.error("خطأ في جلب البيانات:", error);
