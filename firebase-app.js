@@ -26,9 +26,9 @@ async function loadMoviesFromFirebase() {
         querySnapshot.forEach((doc) => {
             const data = doc.data();
             
-            // استخراج رقم الفيديو من الرابط بتاع اليوتيوب
             let ytUrl = data.youtubeLink || data['رابط يوتيوب'] || "";
-            let ytId = ytUrl;
+            let ytId = ytUrl; 
+            
             if(ytUrl.includes("youtu.be/")) {
                 ytId = ytUrl.split("youtu.be/")[1].split("?")[0];
             } else if(ytUrl.includes("v=")) {
@@ -36,13 +36,17 @@ async function loadMoviesFromFirebase() {
             }
 
             newMovies.push({
-                id: index++, // إعطاء رقم تسلسلي للتطبيق
+                id: index++,
                 title: data.title || data['عنوان'] || "بدون عنوان",
                 year: data.year || data['سنة'] || "2024",
                 rating: Number(data.supervisorRating || data['تقييم المشرف'] || 0),
                 cat: data.genres || data['الأنواع'] || "عام",
-                vid: ytId, // رقم الفيديو فقط
+                vid: ytId,
+                // السطرين دول هما السر عشان الفيديو يشتغل
+                vids: [ { vid: ytId, channel: "المشرف", title: "ملخص الفيلم" } ], 
                 desc: data.supervisorOpinion || data['رأي المشرف'] || data.synopsis || data['ملخص الفيلم'] || "",
+                date: data.year || data['سنة'] || "2024",
+                channel: "المشرف",
                 bg: "linear-gradient(45deg, #19191F, #E50914)"
             });
         });
