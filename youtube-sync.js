@@ -222,6 +222,10 @@
     ['SHoNgxBoNg','تحديات شونق بونق','الألعاب والجيمينج'],
     ['Topz','توبز','الألعاب والجيمينج'],
     ['TeamFalconsGG','فالكونز','الألعاب والجيمينج'],
+    ['ocmz','أوسمز','الألعاب والجيمينج'],
+    ['ArabGamesNetwork','سيد شبكة ألعاب العرب','الألعاب والجيمينج'],
+    ['feraskaru','فراس جيمر','الألعاب والجيمينج'],
+    ['timorx','تيمور','الألعاب والجيمينج'],
 
     ['Alghafri','أحمد الغافري','المنوعات والترفيه'],
     ['BarryTube','باري تيوب','المنوعات والترفيه'],
@@ -251,6 +255,11 @@
     ['AsharqBusiness','اقتصاد الشرق مع بلومبرغ','الأخبار والاقتصاد والتحليل']
   ];
 
+  // نشيل أي قناة مكررة (نفس الـ handle أو الـ ID) ونحتفظ بأول ظهور
+  var CH = RAW.filter(function(c, i){
+    return RAW.findIndex(function(x){ return x[0] === c[0]; }) === i;
+  });
+
   var GROUP = {
     'ملخصات الأفلام والمسلسلات':'الأفلام والمسلسلات',
     'الكورة والرياضة':'الرياضة',
@@ -263,6 +272,7 @@
   function groupOf(sec){ return GROUP[sec] || 'المزيد'; }
 
   var HOURS = 12, PARTIAL_HOURS = 1, YT = [], base = null, FAILED = [], CHANS = [], CHF = 'الكل';
+  var SHORTS = [], SHORT_IDS = {}, CHI = -1;
 
   // ---------- الستايل ----------
   var css = '' +
@@ -277,7 +287,11 @@
     '.cs-ch img,.cs-ch span{width:72px;height:72px;border-radius:50%;object-fit:cover;background:#E50914;color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700}' +
     '.cs-ch b{font-weight:600;line-height:1.3}' +
     '.cs-grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}' +
-    '.cs-back{background:#19191F;color:#fff;border:1px solid #2a2a33;border-radius:10px;padding:8px 14px;margin:6px 0 10px;cursor:pointer}';
+    '.cs-back{background:#19191F;color:#fff;border:1px solid #2a2a33;border-radius:10px;padding:8px 14px;margin:6px 0 10px;cursor:pointer}' +
+    '.cs-chbtn{background:none;border:0;cursor:pointer;padding:0;font:inherit;color:#fff}' +
+    '.cs-head{display:flex;align-items:center;gap:12px;margin:8px 0 16px}' +
+    '.cs-head img,.cs-head span{width:72px;height:72px;border-radius:50%;object-fit:cover;background:#E50914;color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;flex:none}' +
+    '.cs-head b{font-size:18px;display:block}.cs-head small{color:#9a9aa5}';
   var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
 
   function wrapped(){ return base().concat(YT); }
@@ -289,31 +303,43 @@
   function info(c){
     var isId = c[0].indexOf('UC') === 0 && c[0].length === 24;
     var q = isId ? 'id=' + c[0] : 'forHandle=' + encodeURIComponent('@' + c[0]);
-    return api('channels?part=snippet,contentDetails&' + q).then(function(j){
+    return api('channels?part=snippet,contentDetails,statistics&' + q).then(function(j){
       var it = j.items && j.items[0];
       if(!it){ throw new Error(j.error ? j.error.message : 'القناة مش موجودة'); }
       var t = it.snippet.thumbnails || {};
       return {
+        subs: parseInt(it.statistics && it.statistics.subscriberCount, 10),
         up: it.contentDetails.relatedPlaylists.uploads,
         img: ((t.medium || t.default || {}).url) || '',
         url: isId ? 'https://www.youtube.com/channel/' + c[0] : 'https://www.youtube.com/@' + c[0]
       };
     });
   }
+  function mk(it, c, isShort){
+    var s = it.snippet, id = s.resourceId && s.resourceId.videoId;
+    if(!id || s.title === 'Private video' || s.title === 'Deleted video') return null;
+    return {id:'yt-' + id, mid:null, title:s.title, ch:c[1], grp:isShort ? 'شورتس' : groupOf(c[2]),
+      date:(s.publishedAt || '').slice(0,10).replace(/-/g,'/'), vid:id, short:isShort,
+      bg:'url(https://i.ytimg.com/vi/' + id + '/mqdefault.jpg) center/cover'};
+  }
+  function listOf(pid, max){
+    return api('playlistItems?part=snippet&maxResults=' + max + '&playlistId=' + pid).then(function(p){
+      if(p.error){ throw new Error(p.error.message); }
+      return p.items || [];
+    });
+  }
   function load(c, tries){
     return info(c).then(function(inf){
-      return api('playlistItems?part=snippet&maxResults=8&playlistId=' + inf.up).then(function(p){
-        if(p.error){ throw new Error(p.error.message); }
-        var v = [];
-        (p.items || []).forEach(function(it){
-          var s = it.snippet, id = s.resourceId && s.resourceId.videoId;
-          if(!id || s.title === 'Private video' || s.title === 'Deleted video') return;
-          v.push({id:'yt-' + id, mid:null, title:s.title, ch:c[1], grp:groupOf(c[2]),
-            date:(s.publishedAt || '').slice(0,10).replace(/-/g,'/'), vid:id,
-            bg:'url(https://i.ytimg.com/vi/' + id + '/mqdefault.jpg) center/cover'});
-        });
-        if(!v.length) return null;
-        return {name:c[1], ini:c[1].charAt(0), img:inf.img, url:inf.url, sec:c[2], v:v};
+      if(!(inf.subs >= 100000)) return null; // أقل من ١٠٠ ألف مشترك (أو العدد مخفي)
+      return Promise.all([
+        listOf(inf.up, 8),
+        listOf(inf.up.replace(/^UU/, 'UUSH'), 12).catch(function(){ return []; })
+      ]).then(function(both){
+        var v = [], sh = [];
+        both[0].forEach(function(it){ var x = mk(it, c, false); if(x) v.push(x); });
+        both[1].forEach(function(it){ var x = mk(it, c, true); if(x) sh.push(x); });
+        if(!v.length && !sh.length) return null;
+        return {name:c[1], ini:c[1].charAt(0), img:inf.img, url:inf.url, sec:c[2], v:v, sh:sh};
       });
     }).catch(function(e){
       if(tries < 1) return load(c, tries + 1);
@@ -327,23 +353,29 @@
   function build(res){
     CHANS = [];
     YT.length = 0;
+    SHORTS = [];
+    SHORT_IDS = {};
     res.forEach(function(r){
       if(!r) return;
-      CHANS.push({name:r.name, ini:r.ini, img:r.img, url:r.url, sec:r.sec, group:groupOf(r.sec)});
+      CHANS.push({name:r.name, ini:r.ini, img:r.img, url:r.url, sec:r.sec, group:groupOf(r.sec), v:r.v, sh:r.sh || []});
       r.v.forEach(function(x){ YT.push(x); });
+      (r.sh || []).forEach(function(x){ SHORTS.push(x); SHORT_IDS[x.vid] = true; });
     });
     YT.sort(byDate);
+    SHORTS.sort(byDate);
     window.CHANNELS = CHANS.map(function(c){ return {name:c.name, ini:c.ini, blurb:c.group}; });
   }
 
   // ---------- الرئيسية ----------
   SCR.home = function(){
     var movies = window.vids().filter(function(v){ return String(v.id).indexOf('yt-') !== 0; });
+    var reg = YT.filter(function(x){ return !SHORT_IDS[x.vid]; });
     var s = '';
     if(movies.length) s += sec('أحدث الملخصات', row(movies.slice(0, 8), vcard));
-    if(YT.length) s += sec('أحدث القيديوهات', row(YT.slice(0, 12), vcard));
+    if(reg.length) s += sec('أحدث القيديوهات', row(reg.slice(0, 12), vcard));
+    if(SHORTS.length) s += sec('شورتس', row(SHORTS.slice(0, 12), vcard));
     MAIN.forEach(function(g){
-      var vs = YT.filter(function(x){ return x.grp === g; }).slice(0, 12);
+      var vs = reg.filter(function(x){ return x.grp === g; }).slice(0, 12);
       if(vs.length) s += sec(esc(g), row(vs, vcard));
     });
     return s;
@@ -353,9 +385,11 @@
   window.csOpen = function(g){ CHF = g; S.screen = 'channels'; render(); };
   window.csChip = function(g){ CHF = g; render(); };
   SCR.cats = function(){
-    var cards = MAIN.concat(['المزيد']).map(function(g){
-      var n = CHANS.filter(function(c){ return c.group === g; }).length;
-      return '<button class="cs-cat" onclick="csOpen(\'' + g + '\')"><b>' + esc(g) + '</b><small>' + n + ' قناة</small></button>';
+    var cards = MAIN.concat(['شورتس','المزيد']).map(function(g){
+      var isS = g === 'شورتس';
+      var n = isS ? SHORTS.length : CHANS.filter(function(c){ return c.group === g; }).length;
+      var fn = isS ? 'pickCat(\'شورتس\')' : 'csOpen(\'' + g + '\')';
+      return '<button class="cs-cat" onclick="' + fn + '"><b>' + esc(g) + '</b><small>' + n + (isS ? ' فيديو' : ' قناة') + '</small></button>';
     }).join('');
     return sec('الأقسام', '<div class="cs-cats">' + cards + '</div>');
   };
@@ -368,7 +402,7 @@
     var list = CHANS.filter(function(c){ return CHF === 'الكل' || c.group === CHF; });
     var grid = list.map(function(c){
       var av = c.img ? '<img src="' + c.img + '" alt="">' : '<span>' + esc(c.ini) + '</span>';
-      return '<a class="cs-ch" href="' + c.url + '" target="_blank" rel="noopener">' + av + '<b>' + esc(c.name) + '</b></a>';
+      return '<button class="cs-ch cs-chbtn" onclick="csChan(' + CHANS.indexOf(c) + ')">' + av + '<b>' + esc(c.name) + '</b></button>';
     }).join('');
     if(!CHANS.length) return '<p style="text-align:center;color:#9a9aa5">جاري تحميل القنوات...</p>';
     return '<div class="cs-chips">' + chips + '</div><div class="cs-grid">' + grid + '</div>';
@@ -405,11 +439,28 @@
   }
   window.pickCat = function(c){ S.cat = c; S.q = ''; S.screen = 'genre'; render(); };
   SCR.genre = function(){
-    var list = window.vids().filter(function(v){ return matchGenre(v, S.cat); });
+    var list = S.cat === 'شورتس'
+      ? SHORTS
+      : window.vids().filter(function(v){ return !SHORT_IDS[v.vid] && matchGenre(v, S.cat); });
     var body = list.length
       ? '<div class="cs-grid2">' + list.map(vcard).join('') + '</div>'
-      : '<p style="text-align:center;color:#9a9aa5;padding:30px 0">مفيش فيديوهات في نوع ' + esc(S.cat) + ' لسه</p>';
+      : '<p style="text-align:center;color:#9a9aa5;padding:30px 0">مفيش فيديوهات في ' + esc(S.cat) + ' لسه</p>';
     return '<button class="cs-back" onclick="go(\'home\')">رجوع</button>' + sec(esc(S.cat), body);
+  };
+
+  // ---------- صفحة القناة داخل التطبيق ----------
+  window.csChan = function(i){ CHI = i; S.screen = 'chan'; render(); };
+  SCR.chan = function(){
+    var c = CHANS[CHI];
+    if(!c) return '<button class="cs-back" onclick="go(\'channels\')">رجوع</button><p style="text-align:center;color:#9a9aa5">القناة مش موجودة</p>';
+    var all = c.v.concat(c.sh || []).sort(byDate);
+    var head = '<div class="cs-head">' +
+      (c.img ? '<img src="' + c.img + '" alt="">' : '<span>' + esc(c.ini) + '</span>') +
+      '<div><b>' + esc(c.name) + '</b><small>' + esc(c.group) + ' · ' + all.length + ' فيديو</small></div></div>';
+    var body = all.length
+      ? '<div class="cs-grid2">' + all.map(vcard).join('') + '</div>'
+      : '<p style="text-align:center;color:#9a9aa5;padding:30px 0">مفيش فيديوهات لسه</p>';
+    return '<button class="cs-back" onclick="go(\'channels\')">رجوع</button>' + head + body;
   };
 
   // ---------- التحميل والكاش ----------
@@ -418,7 +469,7 @@
     try{ render(); }catch(e){}
   }
   var cached = null;
-  try{ cached = JSON.parse(localStorage.getItem('ytc5') || 'null'); }catch(e){}
+  try{ cached = JSON.parse(localStorage.getItem('ytc7') || 'null'); }catch(e){}
   if(cached){
     var ttl = (cached.f ? PARTIAL_HOURS : HOURS) * 3600000;
     if(Date.now() - cached.t < ttl){ apply(cached.d); return; }
@@ -430,6 +481,6 @@
   });
   Promise.all(UNIQUE.map(function(c){ return load(c, 0); })).then(function(res){
     apply(res);
-    try{ localStorage.setItem('ytc5', JSON.stringify({t:Date.now(), d:res, f:FAILED.length})); }catch(e){}
+    try{ localStorage.setItem('ytc7', JSON.stringify({t:Date.now(), d:res, f:FAILED.length})); }catch(e){}
   });
 })();
