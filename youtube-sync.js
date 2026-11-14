@@ -275,7 +275,9 @@
     '.cs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 10px}' +
     '.cs-ch{display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;color:#fff;font-size:12px;text-align:center}' +
     '.cs-ch img,.cs-ch span{width:72px;height:72px;border-radius:50%;object-fit:cover;background:#E50914;color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700}' +
-    '.cs-ch b{font-weight:600;line-height:1.3}';
+    '.cs-ch b{font-weight:600;line-height:1.3}' +
+    '.cs-grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}' +
+    '.cs-back{background:#19191F;color:#fff;border:1px solid #2a2a33;border-radius:10px;padding:8px 14px;margin:6px 0 10px;cursor:pointer}';
   var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
 
   function wrapped(){ return base().concat(YT); }
@@ -370,6 +372,44 @@
     }).join('');
     if(!CHANS.length) return '<p style="text-align:center;color:#9a9aa5">جاري تحميل القنوات...</p>';
     return '<div class="cs-chips">' + chips + '</div><div class="cs-grid">' + grid + '</div>';
+  };
+
+  // ---------- الأنواع (بتتعرف من العنوان أو بيانات Firestore تلقائياً) ----------
+  var GENRE_KEYS = {
+    'أكشن': ['أكشن','اكشن','action'],
+    'كوميدي': ['كوميدي','كوميديا','comedy','مضحك'],
+    'دراما': ['دراما','drama'],
+    'رعب': ['رعب','horror','مرعب'],
+    'خيال علمي': ['خيال علمي','sci-fi','sci fi','science fiction'],
+    'خيال': ['خيال','fantasy'],
+    'رومانسي': ['رومانسي','رومانسية','romance','romantic'],
+    'جريمة': ['جريمة','crime','بوليسي','غموض'],
+    'تشويق': ['تشويق','thriller','إثارة'],
+    'كرتون': ['كرتون','animation','أنمي','anime']
+  };
+  function matchGenre(v, g){
+    var keys = GENRE_KEYS[g] || [g];
+    var hay = String(v.title || '');
+    if(String(v.id).indexOf('yt-') !== 0){
+      // فيلم من Firestore: بنقرأ الحقول اللي اسمها فيه نوع/تصنيف
+      (window.MOVIES || []).forEach(function(m){
+        if(m && m.id === v.mid){
+          Object.keys(m).forEach(function(k){
+            if(/نوع|genre|cat|تصنيف/i.test(k)) hay += ' ' + String(m[k]);
+          });
+        }
+      });
+    }
+    hay = hay.toLowerCase();
+    return keys.some(function(k){ return hay.indexOf(k.toLowerCase()) >= 0; });
+  }
+  window.pickCat = function(c){ S.cat = c; S.q = ''; S.screen = 'genre'; render(); };
+  SCR.genre = function(){
+    var list = window.vids().filter(function(v){ return matchGenre(v, S.cat); });
+    var body = list.length
+      ? '<div class="cs-grid2">' + list.map(vcard).join('') + '</div>'
+      : '<p style="text-align:center;color:#9a9aa5;padding:30px 0">مفيش فيديوهات في نوع ' + esc(S.cat) + ' لسه</p>';
+    return '<button class="cs-back" onclick="go(\'home\')">رجوع</button>' + sec(esc(S.cat), body);
   };
 
   // ---------- التحميل والكاش ----------
