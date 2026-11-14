@@ -1,254 +1,663 @@
-// Club Stream: مقدمة أول مرة + عداد الوقت + ريلز لانهائي + فيديوهات مقترحة + الإعدادات
+// Club Stream: ربط القنوات بـ YouTube + الواجهة الجديدة
 (function(){
+  var KEY = 'AIzaSyCf1Jy5JxAXicOjjMa-RpusehjMybwckxM'; // مقيّد بموقعنا فقط
+  // [الـ handle أو الـ ID, الاسم اللي هيظهر, القسم]
+  var RAW = [
+    ['Watchitmena','WATCH IT','ملخصات الأفلام والمسلسلات'],
+    ['film.feel.50','فيلم في الخمسينة','ملخصات الأفلام والمسلسلات'],
+    ['FilmGamed','فيلم جامد','ملخصات الأفلام والمسلسلات'],
+    ['UCqefjZSI4puqNd7S7jPLrFQ','ملخصات مكاوي','ملخصات الأفلام والمسلسلات'],
+    ['GeorgeAshraf','جورج أشرف','ملخصات الأفلام والمسلسلات'],
+    ['mukhtarhassb','كوكلي','ملخصات الأفلام والمسلسلات'],
+    ['moviesroom1','موفيز روم','ملخصات الأفلام والمسلسلات'],
+    ['hddrama90','HD DRAMA','ملخصات الأفلام والمسلسلات'],
+    ['elkholasa_extra','الخلاصة إكسترا','ملخصات الأفلام والمسلسلات'],
+    ['filmfelbekoo','فيلم في البيكو','ملخصات الأفلام والمسلسلات'],
+    ['-filmtshino','فيلمتشينو','ملخصات الأفلام والمسلسلات'],
+    ['filmo3laa','فيلمو علاء','ملخصات الأفلام والمسلسلات'],
+    ['FilmCaps','Film Caps','ملخصات الأفلام والمسلسلات'],
+    ['ondramaeg','ON drama','ملخصات الأفلام والمسلسلات'],
+    ['hashtagente','Hashtag Ent','ملخصات الأفلام والمسلسلات'],
+    ['molakhasat7elwa','ملخصات حلوة','ملخصات الأفلام والمسلسلات'],
+    ['film3almashy2','فيلم ع الماشي','ملخصات الأفلام والمسلسلات'],
+    ['molakhasataflam1','ملخصات أفلام','ملخصات الأفلام والمسلسلات'],
+    ['mohamednero','Mohammed Nero','ملخصات الأفلام والمسلسلات'],
+    ['ashrhalirecap','اشرحلي فيلم','ملخصات الأفلام والمسلسلات'],
+    ['-filmfeelmare5_official','فيلم في المريخ','ملخصات الأفلام والمسلسلات'],
+
+    ['DawletElTlawa','دولة التلاوة','التلاوات القرآنية والابتهالات'],
+    ['islam_sobhi','إسلام صبحي','التلاوات القرآنية والابتهالات'],
+    ['alafasy','مشاري راشد العفاسي','التلاوات القرآنية والابتهالات'],
+    ['yasseraldosry','ياسر الدوسري','التلاوات القرآنية والابتهالات'],
+    ['maheralmuaiqly','ماهر المعيقلي','التلاوات القرآنية والابتهالات'],
+    ['abdulbaasitabdussamad','عبد الباسط عبد الصمد','التلاوات القرآنية والابتهالات'],
+    ['elmenshawiofficial','محمد صديق المنشاوي','التلاوات القرآنية والابتهالات'],
+    ['hazzaalblushi','هزاع البلوشي','التلاوات القرآنية والابتهالات'],
+    ['ahmad_alnufais','أحمد النفيس','التلاوات القرآنية والابتهالات'],
+    ['faresabbad','فارس عباد','التلاوات القرآنية والابتهالات'],
+    ['sheikhsaadalghamdi','سعد الغامدي','التلاوات القرآنية والابتهالات'],
+    ['shuraym1414','سعود الشريم','التلاوات القرآنية والابتهالات'],
+    ['alqtami','ناصر القطامي','التلاوات القرآنية والابتهالات'],
+    ['khaledaljalilofficial','خالد الجليل','التلاوات القرآنية والابتهالات'],
+    ['radmohammad','رعد الكردي','التلاوات القرآنية والابتهالات'],
+    ['wadiealymni','وديع اليمني','التلاوات القرآنية والابتهالات'],
+    ['sherifmostafaofficial','شريف مصطفى','التلاوات القرآنية والابتهالات'],
+    ['omarhishamalarabi','عمر هشام العربي','التلاوات القرآنية والابتهالات'],
+    ['alluhaydan','محمد اللحيدان','التلاوات القرآنية والابتهالات'],
+    ['bandarbalilaah','بندر بليلة','التلاوات القرآنية والابتهالات'],
+    ['hosariofficial','محمود خليل الحصري','التلاوات القرآنية والابتهالات'],
+    ['shmostafaismail','مصطفى إسماعيل','التلاوات القرآنية والابتهالات'],
+    ['9li9','عبد الرحمن مسعد','التلاوات القرآنية والابتهالات'],
+    ['shrefaatofficial','محمد رفعت','التلاوات القرآنية والابتهالات'],
+    ['almajdquranchannelofficial','قناة المجد للقرآن الكريم','التلاوات القرآنية والابتهالات'],
+    ['SaudiQuranTv','القرآن الكريم (بث من الحرم)','التلاوات القرآنية والابتهالات'],
+    ['UCkdyjOzo6jkrM2tvC4pnx7A','أجمل تلاوات القرآن الكريم','التلاوات القرآنية والابتهالات'],
+    ['Quran_Ruqyah_Live','الرقية الشرعية مباشر','التلاوات القرآنية والابتهالات'],
+
+    ['joehattab','جو حطاب','السفر والمغامرات والرحلات'],
+    ['ibnhattuta','ابن حتوتة','السفر والمغامرات والرحلات'],
+    ['kareemelsayedvlogs','كريم السيد','السفر والمغامرات والرحلات'],
+    ['omr94','عمر فاروق','السفر والمغامرات والرحلات'],
+    ['IbnHattutaTravels','قاسم الحتو','السفر والمغامرات والرحلات'],
+    ['khoubai','خبيب','السفر والمغامرات والرحلات'],
+    ['rahalista','رحاليستا','السفر والمغامرات والرحلات'],
+    ['saudlkandiri','سعود الكندري','السفر والمغامرات والرحلات'],
+    ['haggagovic','حجاجوفيتش','السفر والمغامرات والرحلات'],
+    ['ahmedelbadawy1','أحمد البدوي','السفر والمغامرات والرحلات'],
+    ['RouguiAdventures','مغامرات الروقي','السفر والمغامرات والرحلات'],
+    ['alsurii','الصوري','السفر والمغامرات والرحلات'],
+    ['ahmedmoharam','أحمد محرم','السفر والمغامرات والرحلات'],
+    ['AlJazeeraTravel','برنامج المسافر (الجزيرة)','السفر والمغامرات والرحلات'],
+
+    ['UCF7IOceliTr_6HQfPrUBwZw','الشيف شاهين','الطبخ والأكل وتجارب المطاعم'],
+    ['UCSaq5NekrOZKCB_DyS734jA','آية حبيب','الطبخ والأكل وتجارب المطاعم'],
+    ['UCqI_84SQbgyAk9g-ysj77gQ','أبو جوليا','الطبخ والأكل وتجارب المطاعم'],
+    ['UC7OAYDUY75By8RUtxrrQzEQ','نادية السيد','الطبخ والأكل وتجارب المطاعم'],
+    ['UCZ6XRv3XHbPia5fwz0Uq8Xw','الشيف عمر','الطبخ والأكل وتجارب المطاعم'],
+    ['UClvCJMfEwg_hQlnFzJoZtSQ','هبة أبو الخير','الطبخ والأكل وتجارب المطاعم'],
+    ['FatmaAbuHaty','فاطمة أبو حاتي','الطبخ والأكل وتجارب المطاعم'],
+    ['MarwaElShafei','مروة الشافعي','الطبخ والأكل وتجارب المطاعم'],
+    ['UCVXD2kNki3rfLMhF8uNIcBQ','أم وليد','الطبخ والأكل وتجارب المطاعم'],
+    ['BasilElhaj','باسل الحاج','الطبخ والأكل وتجارب المطاعم'],
+    ['AmrSherif','عمرو شريف','الطبخ والأكل وتجارب المطاعم'],
+    ['ElAkeel','الأكيل','الطبخ والأكل وتجارب المطاعم'],
+    ['UCAeYxQ-q5LngmtsCb8aVGuw','شيف بلال عمر','الطبخ والأكل وتجارب المطاعم'],
+    ['ManalAlalem','منال العالم','الطبخ والأكل وتجارب المطاعم'],
+    ['ChefHassan','شيف حسن','الطبخ والأكل وتجارب المطاعم'],
+    ['ChefElSherbiny','شيف الشربيني','الطبخ والأكل وتجارب المطاعم'],
+    ['SallyFouad','سالي فؤاد','الطبخ والأكل وتجارب المطاعم'],
+    ['NaglaaElSharshaby','نجلاء الشرشابي','الطبخ والأكل وتجارب المطاعم'],
+    ['RabahMuhammad','رباح محمد','الطبخ والأكل وتجارب المطاعم'],
+    ['AtyabAlwasafat','أطيب الوصفات','الطبخ والأكل وتجارب المطاعم'],
+    ['UCCjZrjq78BURV1OpxhBSS0A','مطبخ سمر','الطبخ والأكل وتجارب المطاعم'],
+    ['UCRWtn__Vdk2FTet2IKWkYVQ','حبي حياتك ودلعي مطبخك','الطبخ والأكل وتجارب المطاعم'],
+    ['UCUnkkmSbzuPzMlUDq-rxsfQ','أكل بيتي','الطبخ والأكل وتجارب المطاعم'],
+    ['UCxJFfPJKILau17kwxvRSn6w','Food Rate','الطبخ والأكل وتجارب المطاعم'],
+    ['MyCooking','طبخاتي','الطبخ والأكل وتجارب المطاعم'],
+
+    ['arabgt','عرب جي تي','السيارات والمحركات'],
+    ['HasanKutbi','حسن كتبي','السيارات والمحركات'],
+    ['UCqLFMEtmRNcyMmWqaqg70tA','carwow العربية','السيارات والمحركات'],
+    ['UC5GIkqRHM3lLxlnT1B2E_2g','حسن المسيباوي','السيارات والمحركات'],
+    ['UCYKNBblWyGPJv_4-cjp8Oaw','Motorsport MENA','السيارات والمحركات'],
+    ['SaudiAuto','سعودي أوتو','السيارات والمحركات'],
+    ['AlmurabaNet','المربع نت','السيارات والمحركات'],
+    ['StriveME','سترايف مي','السيارات والمحركات'],
+    ['FahadAlwakala','فهد الوكالة','السيارات والمحركات'],
+    ['Sayartak','سيارتك مع عبد الحق','السيارات والمحركات'],
+    ['MahmoudKhairy','محمود خيري','السيارات والمحركات'],
+    ['AhmedElWakeel','أحمد الوكيل','السيارات والمحركات'],
+    ['TamerBashir','تامر بشير','السيارات والمحركات'],
+    ['KareemDeeb','كريم ديب','السيارات والمحركات'],
+    ['SuhaibShashaa','صهيب شعشاعة','السيارات والمحركات'],
+    ['UCiNZzcyLdOr_C3sBmWa1dIQ','شام أوتو','السيارات والمحركات'],
+    ['UCvEEdwY-FzpwUtAswIRy-nw','سيارات السعودية','السيارات والمحركات'],
+    ['UCTJGQndLkMWKcpHQ1KBphtw','أوتو كاتش مع هاني داغستاني','السيارات والمحركات'],
+    ['UCMTyVP02xzFu6ntPuMPstBQ','المهندس حسن','السيارات والمحركات'],
+    ['iraq_cars1','سيارات العراق','السيارات والمحركات'],
+    ['car_vlogs2018','نظرة في عالم السيارات','السيارات والمحركات'],
+    ['reviewtube74','ReviewTUBE','السيارات والمحركات'],
+
+    ['AnimeForAllPlus','أنمي للجميع','ملخصات الأنمي'],
+    ['HERKLIZ','هركليز','ملخصات الأنمي'],
+    ['Bta3Anime','بتاع انمي','ملخصات الأنمي'],
+    ['SupeRPrestigE','SupeR PrestigE','ملخصات الأنمي'],
+    ['AnimeTrack','Anime Track','ملخصات الأنمي'],
+    ['UCRRkWJprAlxsJPzhLCG5ptg','Anime Room Max','ملخصات الأنمي'],
+    ['molakhsanime','ملخص أنمي','ملخصات الأنمي'],
+    ['3alam-al-anime','عالم الأنمي','ملخصات الأنمي'],
+
+    ['UCGp7eD-NbJj1TqZAIQP6rKw','محمد عدنان','الكورة والرياضة'],
+    ['UC0j1bJUOS_utB8q618YJ5Bw','ارزع - Erza3','الكورة والرياضة'],
+    ['UC1UYd7UAzwOPIKpjNRkho3A','الهستيري','الكورة والرياضة'],
+    ['AmrNasouhy','صباحو كورة','الكورة والرياضة'],
+    ['MamdouhNasrAllah','ممدوح نصر الله (المدفع)','الكورة والرياضة'],
+    ['UCRKzsmHJmegYjgMJQ0IUanw','سيلو سبورت','الكورة والرياضة'],
+    ['UCohqCse2YII12V8bgC1k5Ew','عبد الله أشرف','الكورة والرياضة'],
+    ['UCMqHY20IFCvAfRNE_IfM11A','الكرة وكريم','الكورة والرياضة'],
+    ['UCt_YDnQzwJykMgTfXC37Imw','أحمد معطي','الكورة والرياضة'],
+    ['UCKg6BySjyqNNncv1noPZ_FA','تكتيكات كرة القدم','الكورة والرياضة'],
+    ['UCcJjpOeSWPRIs_LqbSLzYkQ','مان تو مان','الكورة والرياضة'],
+    ['UCMCfh46Kpix5uQL66qGxwSg','فنتاكتك','الكورة والرياضة'],
+    ['UCeGMC4FMBK36j6ANER_GfxA','الكوتش','الكورة والرياضة'],
+    ['UCE2ynpwa090S3JNQHcMcfZQ','كورة × تكتيك','الكورة والرياضة'],
+    ['UC7N7DXktAhFpRpYb3B6Hnxg','يلا كورة','الكورة والرياضة'],
+    ['UCehv5jSvFUABYVuVTcWOugQ','في الجول','الكورة والرياضة'],
+    ['beINSPORTS','beIN SPORTS العربية','الكورة والرياضة'],
+    ['UC8_NcKfba7mBuKCyUiun3jQ','SSC الرياضية','الكورة والرياضة'],
+
+    ['movies-v8b','الأفلام والمنوعات الهادفة','المحتوى الديني والشبابي الهادف'],
+    ['YoussefElkott','يوسف القط','المحتوى الديني والشبابي الهادف'],
+    ['UCp479sePW_R7NM8AhPyUDoQ','أمير منير','المحتوى الديني والشبابي الهادف'],
+    ['UC2qcjzOEX3lxE73cyroWdiw','بودكاست وعي','المحتوى الديني والشبابي الهادف'],
+    ['UC562PEzdpMULIOtinS79mzw','شريف علي','المحتوى الديني والشبابي الهادف'],
+    ['UCAPzspa_3QnQwk56Sv-qm-Q','الشيخ أحمد عامر','المحتوى الديني والشبابي الهادف'],
+    ['IslamMamdouh','إسلام ممدوح','المحتوى الديني والشبابي الهادف'],
+    ['AmirMirza','أمير ميرزا','المحتوى الديني والشبابي الهادف'],
+    ['MostafaHosny','مصطفى حسني','المحتوى الديني والشبابي الهادف'],
+    ['UCG6w3_CMVYMLnx9j6XKBLDw','مشاري الخراز','المحتوى الديني والشبابي الهادف'],
+    ['ElShaarawy','الشعراوي','المحتوى الديني والشبابي الهادف'],
+    ['Nabulsi.Islamic','د. محمد راتب النابلسي','المحتوى الديني والشبابي الهادف'],
+    ['othmanalkhamees','عثمان الخميس','المحتوى الديني والشبابي الهادف'],
+    ['SalehAlmoghamsy','صالح المغامسي','المحتوى الديني والشبابي الهادف'],
+    ['UCUkUDlhFG10P-CEJq7ED7JA','د. حازم شومان','المحتوى الديني والشبابي الهادف'],
+    ['UCY8WKOYoGxPWfokI1RMRp5w','سمير مصطفى','المحتوى الديني والشبابي الهادف'],
+    ['UCbuKuJHe7bM9maIA18wwg2Q','محمد الغليظ','المحتوى الديني والشبابي الهادف'],
+    ['UCEBakrmegONj8KQmzbpkmeg','علاء حامد','المحتوى الديني والشبابي الهادف'],
+    ['UCpBd9nrwei6IM7V8CyNftYA','ياسر ممدوح','المحتوى الديني والشبابي الهادف'],
+    ['UCfQDF-gVpiSkuKeRtSEG5Kg','د. بدر المشاري','المحتوى الديني والشبابي الهادف'],
+    ['UC5lvbLoyYcWeHpkO4r_SARw','سعد العتيق','المحتوى الديني والشبابي الهادف'],
+    ['UC6MahKV9UFtwLlkKKz1dIYA','د. عمر عبد الكافي','المحتوى الديني والشبابي الهادف'],
+    ['UCMRG4yULVQY2MYUhsmJnU3A','منصور السالمي','المحتوى الديني والشبابي الهادف'],
+    ['SheikhKeshk','عبد الحميد كشك','المحتوى الديني والشبابي الهادف'],
+    ['ZadTvChannel','زاد للإنتاج الإعلامي','المحتوى الديني والشبابي الهادف'],
+
+    ['a5drcom','أخضر (تلخيص الكتب)','ملخصات الكتب والروايات'],
+    ['Dupamicaffeine','دوباميكافين','ملخصات الكتب والروايات'],
+    ['JeelYaqra','جيل يقرأ','ملخصات الكتب والروايات'],
+
+    ['AlJazeeraDocumentary','الجزيرة الوثائقية','الوثائقيات والقصص الواقعية'],
+    ['AsharqDocumentary','الشرق الوثائقية','الوثائقيات والقصص الواقعية'],
+    ['NatGeoAbuDhabi','ناشونال جيوغرافيك أبوظبي','الوثائقيات والقصص الواقعية'],
+    ['FaresAshour','فارس عاشور','الوثائقيات والقصص الواقعية'],
+    ['AboTalalAlHamrani','أبو طلال الحمراني','الوثائقيات والقصص الواقعية'],
+    ['Koil','كويلي','الوثائقيات والقصص الواقعية'],
+
+    ['AlDaheeh','الدحيح','الثقافة والعلوم والتاريخ'],
+    ['Tarikhstan','تاريخستان','الثقافة والعلوم والتاريخ'],
+    ['Share3El3loom','شارع العلوم','الثقافة والعلوم والتاريخ'],
+    ['Elesptalia','الاسبتالية','الثقافة والعلوم والتاريخ'],
+    ['Egychology','إيجيكولوجي','الثقافة والعلوم والتاريخ'],
+    ['3shwa2yat','عشوائيات','الثقافة والعلوم والتاريخ'],
+    ['NidhalGuessoum','نضال قسوم','الثقافة والعلوم والتاريخ'],
+    ['newmedia_life','نيو ميديا لايف','الثقافة والعلوم والتاريخ'],
+
+    ['UCwjLh640nGXSGa9iHRS31ag','بودكاست فنجان','البودكاست العربي'],
+    ['BidonWaraq','بودكاست بدون ورق','البودكاست العربي'],
+    ['ABtalks','ABtalks','البودكاست العربي'],
+    ['ArikaPodcast','بودكاست أريكة','البودكاست العربي'],
+    ['Ma3KamelEhtyaty','مع كامل احتياطي','البودكاست العربي'],
+    ['UCzcagWR2L7_k6f8yDY_FIFA','الصندوق الأسود','البودكاست العربي'],
+    ['UCxJ35BUpX-xuXNZIHLwcfXg','بزنس بالعربي','البودكاست العربي'],
+    ['AbajoraPodcast','بودكاست أبجورة','البودكاست العربي'],
+
+    ['ElzeroWebSchool','الزيرو ويب سكول','البرمجة والتكنولوجيا وتطوير الذات'],
+    ['DroosOnline4u','دروس أونلاين','البرمجة والتكنولوجيا وتطوير الذات'],
+    ['YehiaRadwan','يحيى رضوان','البرمجة والتكنولوجيا وتطوير الذات'],
+    ['AndroidBasha','أندرويد باشا','البرمجة والتكنولوجيا وتطوير الذات'],
+    ['FaisalAlsaif','فيصل السيف','البرمجة والتكنولوجيا وتطوير الذات'],
+    ['AliMuhammadAli','علي محمد علي','البرمجة والتكنولوجيا وتطوير الذات'],
+
+    ['BanderitaX','بندر إكس','الألعاب والجيمينج'],
+    ['AboFlah','أبو فلة','الألعاب والجيمينج'],
+    ['SHoNgxBoNg','تحديات شونق بونق','الألعاب والجيمينج'],
+    ['Topz','توبز','الألعاب والجيمينج'],
+    ['TeamFalconsGG','فالكونز','الألعاب والجيمينج'],
+    ['ocmz','أوسمز','الألعاب والجيمينج'],
+    ['ArabGamesNetwork','سيد شبكة ألعاب العرب','الألعاب والجيمينج'],
+    ['feraskaru','فراس جيمر','الألعاب والجيمينج'],
+    ['timorx','تيمور','الألعاب والجيمينج'],
+
+    ['Alghafri','أحمد الغافري','المنوعات والترفيه'],
+    ['BarryTube','باري تيوب','المنوعات والترفيه'],
+    ['AhmedAburob','أحمد أبو الرب','المنوعات والترفيه'],
+    ['FahadSal','فهد سال','المنوعات والترفيه'],
+    ['Aziz','عزيز','المنوعات والترفيه'],
+    ['MrShnb','مستر شنب','المنوعات والترفيه'],
+    ['GhaithMarwan','غيث مروان','المنوعات والترفيه'],
+    ['WessamQutob','وسام قطب','المنوعات والترفيه'],
+    ['AnasElshayib','أنس الشايب','المنوعات والترفيه'],
+    ['AbdallahAlawneh','عبد الله العلاونة','المنوعات والترفيه'],
+    ['d7oomy999','دحومي 999','المنوعات والترفيه'],
+    ['S7S','شؤون صغيرة','المنوعات والترفيه'],
+    ['MahmoudIsmailTV','محمود إسماعيل','المنوعات والترفيه'],
+
+    ['MokhbirEqtisadi','المخبر الاقتصادي+','الأخبار والاقتصاد والتحليل'],
+    ['ajpluskibreet','AJ+ كبريت','الأخبار والاقتصاد والتحليل'],
+    ['summaryegypt','ملخصات الأخبار','الأخبار والاقتصاد والتحليل'],
+    ['AlarabyTube','العربي تيوب','الأخبار والاقتصاد والتحليل'],
+    ['AlarabyTv_News','العربي - أخبار','الأخبار والاقتصاد والتحليل'],
+    ['AsharqNews','الشرق للأخبار','الأخبار والاقتصاد والتحليل'],
+    ['BBCNewsArabic','BBC News عربي','الأخبار والاقتصاد والتحليل'],
+    ['AlQaheraNews','القاهرة الإخبارية','الأخبار والاقتصاد والتحليل'],
+    ['aljazeera','الجزيرة','الأخبار والاقتصاد والتحليل'],
+    ['SkyNewsArabia','سكاي نيوز عربية','الأخبار والاقتصاد والتحليل'],
+    ['CNNEconomic','CNN الاقتصادية','الأخبار والاقتصاد والتحليل'],
+    ['AsharqBusiness','اقتصاد الشرق مع بلومبرغ','الأخبار والاقتصاد والتحليل']
+  ];
+
+  // نشيل أي قناة مكررة (نفس الـ handle أو الـ ID) ونحتفظ بأول ظهور
+  var CH = RAW.filter(function(c, i){
+    return RAW.findIndex(function(x){ return x[0] === c[0]; }) === i;
+  });
+
+  var GROUP = {
+    'ملخصات الأفلام والمسلسلات':'الأفلام والمسلسلات',
+    'الكورة والرياضة':'الرياضة',
+    'الألعاب والجيمينج':'الألعاب',
+    'ملخصات الأنمي':'الأنمي',
+    'البرمجة والتكنولوجيا وتطوير الذات':'التقنية',
+    'الثقافة والعلوم والتاريخ':'العلوم',
+    'الأخبار والاقتصاد والتحليل':'الأخبار'
+  };
+  var MAIN = ['الأفلام والمسلسلات','الرياضة','الألعاب','الأنمي','التقنية','العلوم','الأخبار'];
+  function groupOf(sec){ return GROUP[sec] || 'المزيد'; }
+
+  var HOURS = 12, PARTIAL_HOURS = 1, YT = [], base = null, FAILED = [], CHANS = [], CHF = 'الكل';
+  var SHORTS = [], SHORT_IDS = {}, CHI = -1;
+  var STATS = {total:0, ok:0, small:0, failed:0};
+
   // ---------- الستايل ----------
   var css = '' +
-    '#cs_wel{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:999;display:flex;align-items:center;justify-content:center;padding:20px}' +
-    '.cs-wbox{background:#19191F;border:1px solid #2a2a33;border-radius:18px;padding:22px;max-width:360px;width:100%;color:#fff;line-height:1.9;text-align:right}' +
-    '.cs-wbox h3{margin:0 0 8px;font-size:19px;color:#A855F7}' +
-    '.cs-wbox p{margin:0 0 10px;font-size:14px;color:#ddd}' +
-    '.cs-wbox ul{margin:0 0 10px;padding-right:18px;font-size:14px;color:#ddd}' +
-    '.cs-wdots{text-align:center;margin:6px 0 10px;color:#5a5a66;letter-spacing:4px}' +
-    '.cs-wbtns{display:flex;gap:8px}' +
-    '.cs-wbtns button{flex:1;background:#7C3AED;color:#fff;border:0;border-radius:12px;padding:11px;font-size:16px;cursor:pointer}' +
-    '.cs-wbtns button.ghost{background:#2a2a33}' +
-    '.cs-tm{font-size:11px;color:#9a9aa5;white-space:nowrap}' +
-    '.cs-card{background:#19191F;border:1px solid #2a2a33;border-radius:14px;padding:16px;margin:0 0 12px;color:#fff}' +
-    '.cs-card h4{margin:0 0 10px;font-size:16px}' +
-    '.cs-card p{margin:0;font-size:13px;color:#b5b5c0;line-height:1.9}' +
-    '.cs-wa{display:block;text-align:center;background:#16a34a;color:#fff;text-decoration:none;border-radius:12px;padding:12px;font-size:15px;margin-top:6px}' +
-    '.cs-feedttl{font-size:17px;font-weight:700;margin:18px 0 10px;color:#fff}' +
-    '.cs-fgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}' +
-    '.cs-fc{background:none;border:0;padding:0;color:#fff;text-align:right;cursor:pointer;font:inherit}' +
-    '.cs-fi{display:block;width:100%;aspect-ratio:16/9;border-radius:12px;background-size:cover;background-position:center;margin-bottom:6px}' +
-    '.cs-fc b{display:block;font-size:13px;line-height:1.4}' +
-    '.cs-fc small{display:block;font-size:11px;color:#9a9aa5;margin-top:2px}' +
-    '#cs_reels{position:fixed;inset:0;background:#000;z-index:300;overflow-y:auto;scroll-snap-type:y mandatory}' +
-    '.cs-rl{position:relative;height:100vh;height:100dvh;scroll-snap-align:start;background:#000;overflow:hidden}' +
-    '.cs-rbg{position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(18px) brightness(.5)}' +
-    '.cs-rl iframe{position:absolute;inset:0;width:100%;height:100%;border:0}' +
-    '.cs-rplay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:76px;height:76px;border-radius:50%;border:0;background:rgba(124,58,237,.92);color:#fff;font-size:30px;cursor:pointer;padding-left:6px}' +
-    '.cs-rl.on .cs-rplay{display:none}' +
-    '.cs-rinfo{position:absolute;bottom:22px;right:14px;left:70px;color:#fff;text-align:right;text-shadow:0 1px 4px #000;pointer-events:none}' +
-    '.cs-rinfo b{display:block;font-size:15px;line-height:1.4}' +
-    '.cs-rinfo small{font-size:12px;color:#ddd}' +
-    '#cs_rclose{position:fixed;top:12px;left:12px;z-index:301;background:rgba(0,0,0,.6);color:#fff;border:0;border-radius:50%;width:40px;height:40px;font-size:18px;cursor:pointer}';
+    '.cs-chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 14px}' +
+    '.cs-chip{flex:none;border:1px solid #2a2a33;background:#19191F;color:#ddd;border-radius:20px;padding:7px 14px;font-size:14px;cursor:pointer}' +
+    '.cs-chip.on{background:#7C3AED;border-color:#7C3AED;color:#fff}' +
+    '.cs-cats{display:grid;grid-template-columns:1fr 1fr;gap:12px}' +
+    '.cs-cat{border:1px solid #2a2a33;background:#19191F;color:#fff;border-radius:14px;padding:22px 12px;text-align:center;cursor:pointer;display:flex;flex-direction:column;gap:6px}' +
+    '.cs-cat b{font-size:16px}.cs-cat small{color:#9a9aa5;font-size:13px}' +
+    '.cs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 10px}' +
+    '.cs-ch{display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;color:#fff;font-size:12px;text-align:center}' +
+    '.cs-ch img,.cs-ch span{width:72px;height:72px;border-radius:50%;object-fit:cover;background:#E50914;color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700}' +
+    '.cs-ch b{font-weight:600;line-height:1.3}' +
+    '.cs-grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}' +
+    '.cs-back{background:#19191F;color:#fff;border:1px solid #2a2a33;border-radius:10px;padding:8px 14px;margin:6px 0 10px;cursor:pointer}' +
+    '.cs-chbtn{background:none;border:0;cursor:pointer;padding:0;font:inherit;color:#fff}' +
+    '.cs-head{display:flex;align-items:center;gap:12px;margin:8px 0 16px}' +
+    '.cs-head img,.cs-head span{width:72px;height:72px;border-radius:50%;object-fit:cover;background:#E50914;color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;flex:none}' +
+    '.cs-head b{font-size:18px;display:block}.cs-head small{color:#9a9aa5}' +
+    '.cs-hero{position:relative;height:200px;border-radius:18px;overflow:hidden;margin:4px 0 18px;background:linear-gradient(135deg,#4c1d95,#7C3AED 45%,#E50914);display:flex;align-items:flex-end;color:#fff;text-decoration:none}' +
+    '.cs-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85),rgba(0,0,0,0) 65%)}' +
+    '.cs-hero .cs-hbody{position:relative;z-index:1;padding:16px;width:100%}' +
+    '.cs-hero .cs-badge{position:absolute;top:12px;right:12px;z-index:1;background:#E50914;color:#fff;font-size:12px;padding:3px 10px;border-radius:8px}' +
+    '.cs-hero h2{margin:0 0 4px;font-size:20px;line-height:1.4}' +
+    '.cs-hero p{margin:0 0 12px;color:#ddd;font-size:13px}' +
+    '.cs-hero .cs-go{display:inline-block;background:#fff;color:#111;border-radius:22px;padding:7px 16px;font-size:14px;font-weight:600}' +
+    '.cs-tile{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#19191F}' +
+    '.cs-tile .cs-dur{position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,.8);color:#fff;font-size:11px;padding:2px 6px;border-radius:5px}' +
+    '.cs-sq{width:78px;height:78px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:#fff;background:linear-gradient(135deg,#7C3AED,#E50914);overflow:hidden}' +
+    '.cs-sq img{width:100%;height:100%;object-fit:cover}' +
+    '.cs-ch.cs-sqw{gap:6px}' +
+    '.cs-catg{border:0;color:#fff;border-radius:16px;padding:0;min-height:110px;text-align:right;cursor:pointer;display:flex;flex-direction:column;justify-content:flex-end;padding:14px;position:relative;overflow:hidden}' +
+    '.cs-catg .cs-ico{position:absolute;top:10px;left:12px;font-size:34px;opacity:.9}' +
+    '.cs-catg b{font-size:16px;position:relative}.cs-catg small{font-size:12px;opacity:.85;position:relative}' +
+    '.cs-secttl{display:flex;align-items:center;justify-content:space-between;margin:18px 0 10px;font-size:17px;font-weight:700}' +
+    '.cs-follow{margin:0 0 14px;background:#7C3AED;color:#fff;border:1px solid #7C3AED;border-radius:22px;padding:8px 18px;font-size:14px;cursor:pointer}' +
+    '.cs-follow.on{background:#19191F;border-color:#7C3AED}' +
+    '.cs-login{display:flex;gap:8px;align-items:center;justify-content:space-between;background:#19191F;border:1px solid #2a2a33;border-radius:14px;padding:10px 12px;margin:4px 0 14px}' +
+    '.cs-login input{flex:1;min-width:0;background:#0f0f14;color:#fff;border:1px solid #2a2a33;border-radius:10px;padding:9px 10px;font-size:14px}' +
+    '.cs-login button{background:#7C3AED;color:#fff;border:0;border-radius:10px;padding:9px 14px;cursor:pointer}' +
+    '.cs-short{display:block;width:100%;aspect-ratio:9/16;border:0;border-radius:14px;background-color:#19191F;background-size:cover;background-position:center;cursor:pointer;padding:0}' +
+    '.cs-st{font-size:13px;margin-top:6px;line-height:1.4;text-align:right}' +
+    '.cs-cnt{font-size:13px;color:#9a9aa5;margin:0 0 10px;line-height:1.8}';
+
+  // ألوان وأيقونات الأقسام (زي الصورة)
+  var CAT_STYLE = {
+    'الأفلام والمسلسلات':['#7C3AED','#2e1065','🎬'],
+    'الرياضة':['#15803d','#052e16','⚽'],
+    'الألعاب':['#2563eb','#0b1d4d','🎮'],
+    'الأنمي':['#ea580c','#431407','🍥'],
+    'التقنية':['#0891b2','#083344','💻'],
+    'العلوم':['#4f46e5','#1e1b4b','🔭'],
+    'الأخبار':['#b91c1c','#3f0d0d','📰'],
+    'شورتس':['#E50914','#450a0a','▶'],
+    'المزيد':['#525252','#171717','✦']
+  };
+  function catBg(g){ var s = CAT_STYLE[g] || CAT_STYLE['المزيد']; return 'linear-gradient(135deg,' + s[0] + ',' + s[1] + ')'; }
+  function catIco(g){ var s = CAT_STYLE[g] || CAT_STYLE['المزيد']; return s[2]; }
   var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
 
-  function shuffle(a){
-    for(var i = a.length - 1; i > 0; i--){
-      var j = Math.floor(Math.random() * (i + 1));
-      var t = a[i]; a[i] = a[j]; a[j] = t;
-    }
-    return a;
-  }
+  function wrapped(){ return base().concat(YT); }
+  setInterval(function(){ if(window.vids !== wrapped){ base = window.vids; window.vids = wrapped; } }, 300);
 
-  // ---------- عداد الوقت ----------
-  var TM_KEY = 'cs_time';
-  function getSec(){ try{ return parseInt(localStorage.getItem(TM_KEY) || '0', 10) || 0; }catch(e){ return 0; } }
-  function fmt(s){
-    var h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
-    return 'قضيت: ' + h + ' ساعة و' + m + ' دقيقة';
+  function api(path){
+    return fetch('https://www.googleapis.com/youtube/v3/' + path + '&key=' + KEY).then(function(r){ return r.json(); });
   }
-  setInterval(function(){
-    if(document.hidden) return;
-    var s = getSec() + 1;
-    try{ localStorage.setItem(TM_KEY, String(s)); }catch(e){}
-    var el = document.getElementById('cs_tm');
-    if(el) el.textContent = fmt(s);
-  }, 1000);
-
-  // ---------- الهيدر ----------
-  window.topbar = function(){
-    return '<div class="topbar"><div class="brand">Club<span> Stream</span></div>' +
-      '<div class="cs-tm" id="cs_tm">' + fmt(getSec()) + '</div>' +
-      '<div><button class="iconbtn" onclick="go(\'search\')">' + ic(P.search) + '</button>' +
-      '<button class="iconbtn" onclick="go(\'settings\')">' + ic(P.menu) + '</button></div></div>';
-  };
-
-  // ---------- مقدمة أول مرة ----------
-  var SLIDES = [
-    '<h3>أهلاً بيك في Club Stream</h3>' +
-      '<p>ده تطبيق بيجمع لك أحسن قنوات يوتيوب في مكان واحد، من أفلام ومسلسلات ورياضة وأنمي وتقنية وعلوم وتلاوات وسفر وطبخ، وأكتر.</p>',
-    '<h3>إيه اللي جوه التطبيق؟</h3>' +
-      '<ul><li>كل قناة ليها صفحة فيها كل فيديوهاتها وشورتسها.</li>' +
-      '<li>الأقسام مرتبة لوحدها، تختار اللي يهمك.</li>' +
-      '<li>زرار الريلز في النص بيفتحلك شورتس طولي بلا نهاية.</li>' +
-      '<li>تقدر تتابع أي قناة وتظهرلك في الرئيسية.</li></ul>',
-    '<h3>ليه التطبيق ده؟</h3>' +
-      '<p>أنا <b>Mohammed Samir</b>، صانع ومشرف البرنامج. هدفه إنه يساعدك تتخلص من التعفن الدماغي، ويخليك تشوف محتوى مفيد ومسلي.</p>' +
-      '<p>خد وقتك واختار اللي يفيدك، ومتنساش تتمشى شوية بعيد عن الشاشة.</p>'
-  ];
-  var SI = 0;
-  function renderSlide(d){
-    var last = SI === SLIDES.length - 1;
-    d.querySelector('.cs-wbody').innerHTML = SLIDES[SI];
-    d.querySelector('.cs-wdots').textContent = SLIDES.map(function(_, i){ return i === SI ? '●' : '○'; }).join(' ');
-    var nxt = d.querySelector('#cs_wnext');
-    nxt.textContent = last ? 'تم' : 'التالي';
-  }
-  function closeWelcome(d){
-    try{ localStorage.setItem('cs_welcomed', '1'); }catch(e){}
-    d.remove();
-  }
-  function showWelcome(){
-    try{ if(localStorage.getItem('cs_welcomed')) return; }catch(e){ return; }
-    SI = 0;
-    var d = document.createElement('div');
-    d.id = 'cs_wel';
-    d.innerHTML = '<div class="cs-wbox"><div class="cs-wbody"></div>' +
-      '<div class="cs-wdots"></div>' +
-      '<div class="cs-wbtns"><button class="ghost" id="cs_wskip">تخطي</button><button id="cs_wnext">التالي</button></div></div>';
-    document.body.appendChild(d);
-    renderSlide(d);
-    d.querySelector('#cs_wskip').onclick = function(){ closeWelcome(d); };
-    d.querySelector('#cs_wnext').onclick = function(){
-      if(SI === SLIDES.length - 1){ closeWelcome(d); return; }
-      SI++;
-      renderSlide(d);
-    };
-  }
-
-  // ---------- الإعدادات ----------
-  function card(title, body){
-    return '<div class="cs-card"><h4>' + title + '</h4>' + body + '</div>';
-  }
-  SCR.settings = function(){
-    return '<button class="cs-back" onclick="go(\'home\')">رجوع</button>' +
-      card('معلومات التطبيق',
-        '<p>Club Stream بيجمع كل قنوات يوتيوب المختارة في مكان واحد: أفلام ومسلسلات، رياضة، أنمي، تقنية، علوم، أخبار، تلاوات، سفر، طبخ، وأكتر.</p>') +
-      card('سياسة الخصوصية',
-        '<p>التطبيق مش بيجمع بياناتك الشخصية ولا بيبعتها لحد. الاسم اللي بتكتبه للمتابعة بيتحفظ على جهازك بس.</p>' +
-        '<p>الفيديوهات بتتشغل من مشغل يوتيوب الرسمي، والتطبيق مش بيحمّل ولا بيعيد نشر أي فيديو.</p>' +
-        '<p>لو عايز تمسح كل بياناتك، امسح بيانات الموقع من إعدادات المتصفح.</p>') +
-      card('تواصل',
-        '<p>لأي استفسار أو اقتراح كلمني على واتساب:</p>' +
-        '<a class="cs-wa" href="https://wa.me/201009714231" target="_blank" rel="noopener">واتساب: 01009714231</a>');
-  };
-
-  // ---------- الريلز: شورتس طولي بلا نهاية ----------
-  var REELS = [], RI = 0, ROBS = null, RLOBS = null;
-  function reelItem(v){
-    return '<div class="cs-rl" data-vid="' + v.vid + '">' +
-      '<div class="cs-rbg" style="background-image:' + (v.bg || 'none') + '"></div>' +
-      '<button class="cs-rplay" aria-label="تشغيل">▶</button>' +
-      '<div class="cs-rinfo"><b>' + esc(v.title) + '</b><small>' + esc(v.ch || '') + '</small></div></div>';
-  }
-  function addReels(){
-    var box = document.getElementById('cs_rlist');
-    if(!box || !REELS.length) return;
-    var html = '';
-    for(var k = 0; k < 8; k++){
-      if(RI >= REELS.length){ REELS = shuffle(REELS.slice()); RI = 0; }
-      html += reelItem(REELS[RI++]);
-    }
-    box.insertAdjacentHTML('beforeend', html);
-    bindReels();
-  }
-  function loadReel(el){
-    var f = el.querySelector('iframe');
-    if(f) return;
-    var vid = el.getAttribute('data-vid');
-    var frame = document.createElement('iframe');
-    frame.setAttribute('allow', 'autoplay; encrypted-media; picture-in-picture');
-    frame.setAttribute('allowfullscreen', '');
-    frame.src = 'https://www.youtube.com/embed/' + vid + '?autoplay=1&playsinline=1&rel=0&modestbranding=1';
-    el.appendChild(frame);
-    el.classList.add('on');
-  }
-  function unloadReel(el){
-    var f = el.querySelector('iframe');
-    if(f){ f.remove(); el.classList.remove('on'); }
-  }
-  function bindReels(){
-    var root = document.getElementById('cs_reels');
-    if(!root || !('IntersectionObserver' in window)) return;
-    if(!ROBS){
-      ROBS = new IntersectionObserver(function(entries){
-        entries.forEach(function(en){
-          var el = en.target;
-          if(en.isIntersecting && en.intersectionRatio > 0.6){
-            // شغّل الحالي ووقّف الباقي عشان مفيش صوت فوق بعض
-            Array.prototype.forEach.call(root.querySelectorAll('.cs-rl.on'), function(o){
-              if(o !== el) unloadReel(o);
-            });
-            loadReel(el);
-          }
-        });
-      }, {root: root, threshold: [0, 0.6, 1]});
-    }
-    if(!RLOBS){
-      RLOBS = new IntersectionObserver(function(entries){
-        if(entries[0].isIntersecting) addReels();
-      }, {root: root, rootMargin: '400px'});
-    }
-    Array.prototype.forEach.call(root.querySelectorAll('.cs-rl:not([data-b])'), function(el){
-      el.setAttribute('data-b', '1');
-      ROBS.observe(el);
-      var btn = el.querySelector('.cs-rplay');
-      if(btn) btn.onclick = function(){ loadReel(el); };
+  function info(c){
+    var isId = c[0].indexOf('UC') === 0 && c[0].length === 24;
+    var q = isId ? 'id=' + c[0] : 'forHandle=' + encodeURIComponent('@' + c[0]);
+    return api('channels?part=snippet,contentDetails,statistics&' + q).then(function(j){
+      var it = j.items && j.items[0];
+      if(!it){ throw new Error(j.error ? j.error.message : 'القناة مش موجودة'); }
+      var t = it.snippet.thumbnails || {};
+      return {
+        subs: parseInt(it.statistics && it.statistics.subscriberCount, 10),
+        up: it.contentDetails.relatedPlaylists.uploads,
+        img: ((t.medium || t.default || {}).url) || '',
+        url: isId ? 'https://www.youtube.com/channel/' + c[0] : 'https://www.youtube.com/@' + c[0]
+      };
     });
-    var more = document.getElementById('cs_rmore');
-    if(more){ RLOBS.disconnect(); RLOBS.observe(more); }
   }
-  SCR.reels = function(){
-    REELS = shuffle((window.CS_SHORTS || []).slice());
-    RI = 0;
-    if(ROBS){ ROBS.disconnect(); ROBS = null; }
-    if(RLOBS){ RLOBS.disconnect(); RLOBS = null; }
-    setTimeout(function(){
-      var root = document.getElementById('cs_reels');
-      if(root) root.scrollTop = 0;
-      addReels();
-    }, 0);
-    return '<div id="cs_reels"><button id="cs_rclose" onclick="go(\'home\')">✕</button>' +
-      '<div id="cs_rlist"></div><div id="cs_rmore" style="height:1px"></div></div>';
-  };
-  // زرار النص (المثلث) بيفتح الريلز بدل ما يشغل فيديو واحد
-  window.playLatest = function(){
-    S.screen = 'reels';
+  function mk(it, c, isShort){
+    var s = it.snippet, id = s.resourceId && s.resourceId.videoId;
+    if(!id || s.title === 'Private video' || s.title === 'Deleted video') return null;
+    return {id:'yt-' + id, mid:null, title:s.title, ch:c[1], grp:isShort ? 'شورتس' : groupOf(c[2]),
+      date:(s.publishedAt || '').slice(0,10).replace(/-/g,'/'), vid:id, short:isShort,
+      bg:'url(https://i.ytimg.com/vi/' + id + '/mqdefault.jpg) center/cover'};
+  }
+  function listOf(pid, max){
+    return api('playlistItems?part=snippet&maxResults=' + max + '&playlistId=' + pid).then(function(p){
+      if(p.error){ throw new Error(p.error.message); }
+      return p.items || [];
+    });
+  }
+  function load(c, tries){
+    return info(c).then(function(inf){
+      if(!(inf.subs >= 100000)) return null; // أقل من ١٠٠ ألف مشترك (أو العدد مخفي)
+      return Promise.all([
+        listOf(inf.up, 8),
+        listOf(inf.up.replace(/^UU/, 'UUSH'), 12).catch(function(){ return []; })
+      ]).then(function(both){
+        var v = [], sh = [];
+        both[0].forEach(function(it){ var x = mk(it, c, false); if(x) v.push(x); });
+        both[1].forEach(function(it){ var x = mk(it, c, true); if(x) sh.push(x); });
+        if(!v.length && !sh.length) return null;
+        return {name:c[1], ini:c[1].charAt(0), img:inf.img, url:inf.url, sec:c[2], v:v, sh:sh, up:inf.up};
+      });
+    }).catch(function(e){
+      if(tries < 1) return load(c, tries + 1);
+      FAILED.push(c[1]);
+      console.warn('YouTube: ما اتحملتش', c[0], e && e.message);
+      return null;
+    });
+  }
+  function byDate(a, b){ return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; }
+
+  function build(res){
+    RND = null;
+    CHANS = [];
+    YT.length = 0;
+    SHORTS = [];
+    SHORT_IDS = {};
+    res.forEach(function(r){
+      if(!r) return;
+      CHANS.push({name:r.name, ini:r.ini, img:r.img, url:r.url, sec:r.sec, group:groupOf(r.sec), v:r.v, sh:r.sh || [], up:r.up});
+      r.v.forEach(function(x){ YT.push(x); });
+      (r.sh || []).forEach(function(x){ SHORTS.push(x); SHORT_IDS[x.vid] = true; });
+    });
+    // خلط عشوائي لفيديوهات الرئيسية (بيتغير مع كل تحميل جديد)
+    for(var i = YT.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = YT[i]; YT[i] = YT[j]; YT[j] = t;
+    }
+    SHORTS.sort(byDate);
+    window.CS_SHORTS = SHORTS; // الشورتس متاحة لصفحة الريلز
+    window.CHANNELS = CHANS.map(function(c){ return {name:c.name, ini:c.ini, blurb:c.group}; });
+  }
+
+  // ---------- كل فيديوهات القناة + الشورتس (تتحمل عند الدخول) ----------
+  var ALL = {};
+  function pages(pid, out, tok, max){
+    if(!pid) return Promise.resolve(out);
+    var url = 'playlistItems?part=snippet&maxResults=50&playlistId=' + pid + (tok ? '&pageToken=' + tok : '');
+    return api(url).then(function(p){
+      if(p.error){ throw new Error(p.error.message); }
+      (p.items || []).forEach(function(it){ out.push(it); });
+      if(p.nextPageToken && out.length < max) return pages(pid, out, p.nextPageToken, max);
+      return out;
+    });
+  }
+  function loadAll(c){
+    ALL[c.name] = {v:[], sh:[], done:false};
+    var up = c.up || '';
+    Promise.all([
+      pages(up, [], null, 300),
+      pages(up.replace(/^UU/, 'UUSH'), [], null, 300).catch(function(){ return []; })
+    ]).then(function(b){
+      var tup = [null, c.name, c.sec];
+      ALL[c.name] = {
+        v: b[0].map(function(it){ return mk(it, tup, false); }).filter(Boolean),
+        sh: b[1].map(function(it){ return mk(it, tup, true); }).filter(Boolean),
+        done: true
+      };
+      render();
+    }).catch(function(){
+      ALL[c.name] = {v:[], sh:[], done:true};
+      render();
+    });
+  }
+
+  // ---------- الدخول بالاسم والمتابعة ----------
+  var USER_KEY = 'cs_user';
+  function getUser(){ try{ return localStorage.getItem(USER_KEY) || ''; }catch(e){ return ''; } }
+  function getFollows(){
+    var u = getUser(); if(!u) return [];
+    try{ return JSON.parse(localStorage.getItem('cs_f_' + u) || '[]'); }catch(e){ return []; }
+  }
+  function isFollow(name){ return getFollows().indexOf(name) >= 0; }
+  window.csLogin = function(){
+    var el = document.getElementById('cs_name');
+    var n = ((el && el.value) || '').trim();
+    if(!n) return;
+    try{ localStorage.setItem(USER_KEY, n); }catch(e){}
     render();
   };
+  window.csLogout = function(){
+    try{ localStorage.removeItem(USER_KEY); }catch(e){}
+    render();
+  };
+  window.csFollow = function(i){
+    var u = getUser();
+    if(!u){ alert('ادخل باسمك من الرئيسية الأول'); return; }
+    var c = CHANS[i]; if(!c) return;
+    var f = getFollows();
+    var k = f.indexOf(c.name);
+    if(k >= 0) f.splice(k, 1); else f.push(c.name);
+    try{ localStorage.setItem('cs_f_' + u, JSON.stringify(f)); }catch(e){}
+    render();
+  };
+  function loginHtml(){
+    var u = getUser();
+    if(u) return '<div class="cs-login"><span>أهلاً يا <b>' + esc(u) + '</b></span><button onclick="csLogout()">خروج</button></div>';
+    return '<div class="cs-login"><input id="cs_name" placeholder="اكتب اسمك عشان تتابع القنوات"><button onclick="csLogin()">دخول</button></div>';
+  }
+  function followHtml(){
+    var f = getFollows();
+    if(!f.length) return '';
+    var list = YT.filter(function(x){ return f.indexOf(x.ch) >= 0; }).slice(0, 12);
+    if(!list.length) return '';
+    return '<div class="cs-secttl"><span>من قنواتي المتابَعة</span></div><div class="cs-grid2">' + list.map(tile).join('') + '</div>';
+  }
 
-  // ---------- صفحة الفيديو: فيديوهات مقترحة بلا نهاية ----------
-  var FEED = [], FEED_I = 0, OBS = null;
-  function feedCard(v){
-    return '<button class="cs-fc" onclick="play(\'' + v.id + '\')">' +
-      '<span class="cs-fi" style="background:' + (v.bg || '#19191F') + '"></span>' +
-      '<b>' + esc(v.title) + '</b><small>' + esc(v.ch || '') + '</small></button>';
+  // ---------- الرئيسية ----------
+  // كارت الشورت: طولي 9:16 والصورة المصغرة تتقص على العمود الأوسط (من غير الخلفية السودا)
+  function shortCard(v){
+    return '<button class="cs-short" style="background:' + (v.bg || '#19191F') + '" onclick="play(\'' + v.id + '\')"></button>' +
+      '<div class="cs-st">' + esc(v.title) + '</div>';
   }
-  function fillFeed(){
-    var g = document.getElementById('cs_fgrid');
-    if(!g || !FEED.length) return;
-    var html = '';
-    for(var k = 0; k < 12; k++){
-      if(FEED_I >= FEED.length){ FEED = shuffle(FEED.slice()); FEED_I = 0; }
-      html += feedCard(FEED[FEED_I++]);
-    }
-    g.insertAdjacentHTML('beforeend', html);
+  function tile(v){
+    var bg = v.bg || '#19191F';
+    return '<button class="cs-tile" style="background:' + bg + ';border:0;padding:0;cursor:pointer" onclick="play(\'' + v.id + '\')">' +
+      '<span class="cs-dur">' + esc(v.ch || '') + '</span></button>' +
+      '<div style="font-size:13px;margin-top:6px;line-height:1.4;text-align:right">' + esc(v.title) + '</div>';
   }
-  var origPlayer = SCR.player;
-  SCR.player = function(){
-    var page = origPlayer();
-    FEED = shuffle(window.vids().filter(function(v){
-      return String(v.id).indexOf('yt-') === 0 && v.id !== S.vid;
-    }));
-    FEED_I = 0;
-    setTimeout(function(){
-      fillFeed();
-      var sentinel = document.getElementById('cs_more');
-      if(OBS) OBS.disconnect();
-      if(sentinel && 'IntersectionObserver' in window){
-        OBS = new IntersectionObserver(function(entries){
-          if(entries[0].isIntersecting) fillFeed();
-        }, {rootMargin: '300px'});
-        OBS.observe(sentinel);
+  // قنوات عشوائية في الرئيسية (بتتختار مرة واحدة لكل تحميل للتطبيق)
+  var RND = null;
+  function randChans(){
+    if(!RND){
+      var a = CHANS.slice();
+      for(var i = a.length - 1; i > 0; i--){
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = a[i]; a[i] = a[j]; a[j] = t;
       }
-    }, 0);
-    return page + '<div class="cs-feedttl">فيديوهات مقترحة</div>' +
-      '<div class="cs-fgrid" id="cs_fgrid"></div><div id="cs_more" style="height:1px"></div>';
+      RND = a.slice(0, 8);
+    }
+    if(!RND.length) return '';
+    return '<div class="cs-secttl"><span>قنوات عشوائية</span></div><div class="cs-grid">' +
+      RND.map(function(c){
+        var av = c.img ? '<img src="' + c.img + '" alt="">' : esc(c.ini);
+        return '<button class="cs-ch cs-chbtn" onclick="csChan(' + CHANS.indexOf(c) + ')"><span class="cs-sq" style="background:' + catBg(c.group) + '">' + av + '</span><b>' + esc(c.name) + '</b></button>';
+      }).join('') + '</div>';
+  }
+  SCR.home = function(){
+    var movies = window.vids().filter(function(v){ return String(v.id).indexOf('yt-') !== 0; });
+    var reg = YT.filter(function(x){ return !SHORT_IDS[x.vid]; });
+    var s = loginHtml() + followHtml() + randChans();
+    // البانر الرئيسي: أحدث فيديو
+    var h = reg[0] || movies[0];
+    if(h){
+      s += '<a class="cs-hero" href="javascript:void(0)" onclick="play(\'' + h.id + '\')">' +
+        '<span class="cs-badge">جديد</span>' +
+        '<div class="cs-hbody"><h2>' + esc(h.title) + '</h2><p>' + esc(h.ch || '') + '</p>' +
+        '<span class="cs-go">▶ مشاهدة الآن</span></div></a>';
+    }
+    if(movies.length) s += sec('أحدث الملخصات', row(movies.slice(0, 8), vcard));
+    if(reg.length){
+      s += '<div class="cs-secttl"><span>أحدث الفيديوهات</span></div>' +
+        '<div class="cs-grid2">' + reg.slice(0, 6).map(tile).join('') + '</div>';
+    }
+    // الأقسام بالألوان
+    var cats = MAIN.concat(['شورتس']).map(function(g){
+      var isS = g === 'شورتس';
+      return '<button class="cs-catg" style="background:' + catBg(g) + '" onclick="' +
+        (isS ? "pickCat('شورتس')" : "csOpen('" + g + "')") + '">' +
+        '<span class="cs-ico">' + catIco(g) + '</span><b>' + esc(g) + '</b></button>';
+    }).join('');
+    s += '<div class="cs-secttl"><span>الأقسام</span></div><div class="cs-cats">' + cats + '</div>';
+    if(SHORTS.length) s += sec('شورتس', row(SHORTS.slice(0, 12), shortCard));
+    MAIN.forEach(function(g){
+      var vs = reg.filter(function(x){ return x.grp === g; }).slice(0, 12);
+      if(vs.length) s += sec(esc(g), row(vs, vcard));
+    });
+    return s;
   };
 
-  // ---------- تشغيل ----------
-  render();
-  setTimeout(showWelcome, 2600);
+  // ---------- الأقسام ----------
+  window.csOpen = function(g){ CHF = g; S.screen = 'channels'; render(); };
+  window.csChip = function(g){ CHF = g; render(); };
+  SCR.cats = function(){
+    var cards = MAIN.concat(['شورتس','المزيد']).map(function(g){
+      var isS = g === 'شورتس';
+      var n = isS ? SHORTS.length : CHANS.filter(function(c){ return c.group === g; }).length;
+      var fn = isS ? 'pickCat(\'شورتس\')' : 'csOpen(\'' + g + '\')';
+      return '<button class="cs-catg" style="background:' + catBg(g) + '" onclick="' + fn + '"><span class="cs-ico">' + catIco(g) + '</span><b>' + esc(g) + '</b><small>' + n + (isS ? ' فيديو' : ' قناة') + '</small></button>';
+    }).join('');
+    return sec('الأقسام', '<div class="cs-cats">' + cards + '</div>');
+  };
+
+  // ---------- القنوات ----------
+  SCR.channels = function(){
+    var chips = ['الكل'].concat(MAIN, ['المزيد']).map(function(g){
+      return '<button class="cs-chip' + (CHF === g ? ' on' : '') + '" onclick="csChip(\'' + g + '\')">' + esc(g) + '</button>';
+    }).join('');
+    var list = CHANS.filter(function(c){ return CHF === 'الكل' || c.group === CHF; });
+    var grid = list.map(function(c){
+      var av = c.img ? '<img src="' + c.img + '" alt="">' : esc(c.ini);
+      return '<button class="cs-ch cs-chbtn cs-sqw" onclick="csChan(' + CHANS.indexOf(c) + ')"><span class="cs-sq" style="background:' + catBg(c.group) + '">' + av + '</span><b>' + esc(c.name) + '</b></button>';
+    }).join('');
+    if(!CHANS.length) return '<p style="text-align:center;color:#9a9aa5">جاري تحميل القنوات...</p>';
+    var movRaw = CH.filter(function(c){ return c[2] === 'ملخصات الأفلام والمسلسلات'; }).length;
+    var movOk = CHANS.filter(function(c){ return c.sec === 'ملخصات الأفلام والمسلسلات'; }).length;
+    var cnt = '<p class="cs-cnt">القنوات في الكود: ' + STATS.total + ' · اتحملت: ' + STATS.ok +
+      ' · أقل من ١٠٠ ألف: ' + STATS.small + ' · فشلت: ' + STATS.failed +
+      '<br>قنوات الأفلام: اتحملت ' + movOk + ' من ' + movRaw + '</p>';
+    return cnt + '<div class="cs-chips">' + chips + '</div><div class="cs-grid">' + grid + '</div>';
+  };
+
+  // ---------- الأنواع (بتتعرف من العنوان أو بيانات Firestore تلقائياً) ----------
+  var GENRE_KEYS = {
+    'أكشن': ['أكشن','اكشن','action'],
+    'كوميدي': ['كوميدي','كوميديا','comedy','مضحك'],
+    'دراما': ['دراما','drama'],
+    'رعب': ['رعب','horror','مرعب'],
+    'خيال علمي': ['خيال علمي','sci-fi','sci fi','science fiction'],
+    'خيال': ['خيال','fantasy'],
+    'رومانسي': ['رومانسي','رومانسية','romance','romantic'],
+    'جريمة': ['جريمة','crime','بوليسي','غموض'],
+    'تشويق': ['تشويق','thriller','إثارة'],
+    'كرتون': ['كرتون','animation','أنمي','anime']
+  };
+  function matchGenre(v, g){
+    var keys = GENRE_KEYS[g] || [g];
+    var hay = String(v.title || '');
+    if(String(v.id).indexOf('yt-') !== 0){
+      // فيلم من Firestore: بنقرأ الحقول اللي اسمها فيه نوع/تصنيف
+      (window.MOVIES || []).forEach(function(m){
+        if(m && m.id === v.mid){
+          Object.keys(m).forEach(function(k){
+            if(/نوع|genre|cat|تصنيف/i.test(k)) hay += ' ' + String(m[k]);
+          });
+        }
+      });
+    }
+    hay = hay.toLowerCase();
+    return keys.some(function(k){ return hay.indexOf(k.toLowerCase()) >= 0; });
+  }
+  window.pickCat = function(c){ S.cat = c; S.q = ''; S.screen = 'genre'; render(); };
+  SCR.genre = function(){
+    var list = S.cat === 'شورتس'
+      ? SHORTS
+      : window.vids().filter(function(v){ return !SHORT_IDS[v.vid] && matchGenre(v, S.cat); });
+    var body = list.length
+      ? '<div class="cs-grid2">' + list.map(S.cat === 'شورتس' ? shortCard : vcard).join('') + '</div>'
+      : '<p style="text-align:center;color:#9a9aa5;padding:30px 0">مفيش فيديوهات في ' + esc(S.cat) + ' لسه</p>';
+    return '<button class="cs-back" onclick="go(\'home\')">رجوع</button>' + sec(esc(S.cat), body);
+  };
+
+  // ---------- صفحة القناة داخل التطبيق ----------
+  window.csChan = function(i){ CHI = i; S.screen = 'chan'; render(); };
+  SCR.chan = function(){
+    var c = CHANS[CHI];
+    var back = '<button class="cs-back" onclick="go(\'channels\')">رجوع</button>';
+    if(!c) return back + '<p style="text-align:center;color:#9a9aa5">القناة مش موجودة</p>';
+    var fol = isFollow(c.name);
+    var head = '<div class="cs-head">' +
+      (c.img ? '<img src="' + c.img + '" alt="">' : '<span>' + esc(c.ini) + '</span>') +
+      '<div><b>' + esc(c.name) + '</b><small>' + esc(c.group) + '</small></div></div>' +
+      '<button class="cs-follow' + (fol ? ' on' : '') + '" onclick="csFollow(' + CHI + ')">' + (fol ? '✓ متابَع' : '+ متابعة') + '</button>';
+    var A = ALL[c.name];
+    if(!A){ loadAll(c); A = ALL[c.name]; }
+    if(!A.done) return back + head + '<p style="text-align:center;color:#9a9aa5;padding:30px 0">جاري تحميل كل فيديوهات القناة...</p>';
+    var body = '<div class="cs-secttl"><span>الفيديوهات (' + A.v.length + ')</span></div>';
+    body += A.v.length
+      ? '<div class="cs-grid2">' + A.v.map(vcard).join('') + '</div>'
+      : '<p style="text-align:center;color:#9a9aa5;padding:20px 0">مفيش فيديوهات لسه</p>';
+    if(A.sh.length){
+      body += '<div class="cs-secttl"><span>الشورتس (' + A.sh.length + ')</span></div><div class="cs-grid2">' + A.sh.map(shortCard).join('') + '</div>';
+    }
+    return back + head + body;
+  };
+
+  // ---------- التحميل والكاش ----------
+  function apply(res, failed){
+    build(res);
+    var ok = res.filter(Boolean).length;
+    failed = failed || 0;
+    STATS = {total: CH.length, ok: ok, failed: failed, small: CH.length - ok - failed};
+    try{ render(); }catch(e){}
+  }
+  var cached = null;
+  try{ cached = JSON.parse(localStorage.getItem('ytc8') || 'null'); }catch(e){}
+  if(cached){
+    var ttl = (cached.f ? PARTIAL_HOURS : HOURS) * 3600000;
+    if(Date.now() - cached.t < ttl){ apply(cached.d, cached.f); return; }
+  }
+  var seen = [];
+  var UNIQUE = RAW.filter(function(c){
+    if(seen.indexOf(c[0]) >= 0) return false;
+    seen.push(c[0]); return true;
+  });
+  Promise.all(UNIQUE.map(function(c){ return load(c, 0); })).then(function(res){
+    apply(res, FAILED.length);
+    try{ localStorage.setItem('ytc8', JSON.stringify({t:Date.now(), d:res, f:FAILED.length})); }catch(e){}
+  });
 })();
