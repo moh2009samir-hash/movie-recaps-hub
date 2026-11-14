@@ -1,4 +1,4 @@
-// ربط القنوات بـ YouTube: بيجيب آخر فيديوهات كل قناة ويعرضها في الرئيسية
+// Club Stream: ربط القنوات بـ YouTube + الواجهة الجديدة
 (function(){
   var KEY = 'AIzaSyCf1Jy5JxAXicOjjMa-RpusehjMybwckxM'; // مقيّد بموقعنا فقط
   // [الـ handle أو الـ ID, الاسم اللي هيظهر, القسم]
@@ -251,12 +251,32 @@
     ['AsharqBusiness','اقتصاد الشرق مع بلومبرغ','الأخبار والاقتصاد والتحليل']
   ];
 
-  // نشيل أي قناة مكررة (نفس الـ handle أو الـ ID) ونحتفظ بأول ظهور
-  var CH = RAW.filter(function(c, i){
-    return RAW.findIndex(function(x){ return x[0] === c[0]; }) === i;
-  });
+  var GROUP = {
+    'ملخصات الأفلام والمسلسلات':'الأفلام والمسلسلات',
+    'الكورة والرياضة':'الرياضة',
+    'الألعاب والجيمينج':'الألعاب',
+    'ملخصات الأنمي':'الأنمي',
+    'البرمجة والتكنولوجيا وتطوير الذات':'التقنية',
+    'الثقافة والعلوم والتاريخ':'العلوم'
+  };
+  var MAIN = ['الأفلام والمسلسلات','الرياضة','الألعاب','الأنمي','التقنية','العلوم'];
+  function groupOf(sec){ return GROUP[sec] || 'المزيد'; }
 
-  var HOURS = 12, PARTIAL_HOURS = 1, YT = [], base = null, FAILED = [];
+  var HOURS = 12, PARTIAL_HOURS = 1, YT = [], base = null, FAILED = [], CHANS = [], CHF = 'الكل';
+
+  // ---------- الستايل ----------
+  var css = '' +
+    '.cs-chips{display:flex;gap:8px;overflow-x:auto;padding:4px 0 14px}' +
+    '.cs-chip{flex:none;border:1px solid #2a2a33;background:#19191F;color:#ddd;border-radius:20px;padding:7px 14px;font-size:14px;cursor:pointer}' +
+    '.cs-chip.on{background:#7C3AED;border-color:#7C3AED;color:#fff}' +
+    '.cs-cats{display:grid;grid-template-columns:1fr 1fr;gap:12px}' +
+    '.cs-cat{border:1px solid #2a2a33;background:#19191F;color:#fff;border-radius:14px;padding:22px 12px;text-align:center;cursor:pointer;display:flex;flex-direction:column;gap:6px}' +
+    '.cs-cat b{font-size:16px}.cs-cat small{color:#9a9aa5;font-size:13px}' +
+    '.cs-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px 10px}' +
+    '.cs-ch{display:flex;flex-direction:column;align-items:center;gap:8px;text-decoration:none;color:#fff;font-size:12px;text-align:center}' +
+    '.cs-ch img,.cs-ch span{width:72px;height:72px;border-radius:50%;object-fit:cover;background:#E50914;color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700}' +
+    '.cs-ch b{font-weight:600;line-height:1.3}';
+  var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
 
   function wrapped(){ return base().concat(YT); }
   setInterval(function(){ if(window.vids !== wrapped){ base = window.vids; window.vids = wrapped; } }, 300);
@@ -264,30 +284,34 @@
   function api(path){
     return fetch('https://www.googleapis.com/youtube/v3/' + path + '&key=' + KEY).then(function(r){ return r.json(); });
   }
-  function uploadsOf(c){
-    // لو عندنا ID قناة (يبدأ بـ UC) نطلع قايمة الرفع منه مباشرة، من غير خطوة زيادة
-    if(c[0].indexOf('UC') === 0 && c[0].length === 24){
-      return Promise.resolve('UU' + c[0].slice(2));
-    }
-    return api('channels?part=contentDetails&forHandle=' + encodeURIComponent('@' + c[0])).then(function(j){
-      var up = j.items && j.items[0] && j.items[0].contentDetails.relatedPlaylists.uploads;
-      if(!up){ throw new Error(j.error ? j.error.message : 'القناة مش موجودة'); }
-      return up;
+  function info(c){
+    var isId = c[0].indexOf('UC') === 0 && c[0].length === 24;
+    var q = isId ? 'id=' + c[0] : 'forHandle=' + encodeURIComponent('@' + c[0]);
+    return api('channels?part=snippet,contentDetails&' + q).then(function(j){
+      var it = j.items && j.items[0];
+      if(!it){ throw new Error(j.error ? j.error.message : 'القناة مش موجودة'); }
+      var t = it.snippet.thumbnails || {};
+      return {
+        up: it.contentDetails.relatedPlaylists.uploads,
+        img: ((t.medium || t.default || {}).url) || '',
+        url: isId ? 'https://www.youtube.com/channel/' + c[0] : 'https://www.youtube.com/@' + c[0]
+      };
     });
   }
   function load(c, tries){
-    return uploadsOf(c).then(function(up){
-      return api('playlistItems?part=snippet&maxResults=8&playlistId=' + up).then(function(p){
+    return info(c).then(function(inf){
+      return api('playlistItems?part=snippet&maxResults=8&playlistId=' + inf.up).then(function(p){
         if(p.error){ throw new Error(p.error.message); }
         var v = [];
         (p.items || []).forEach(function(it){
           var s = it.snippet, id = s.resourceId && s.resourceId.videoId;
           if(!id || s.title === 'Private video' || s.title === 'Deleted video') return;
-          v.push({id:'yt-' + id, mid:null, title:s.title, ch:c[1],
+          v.push({id:'yt-' + id, mid:null, title:s.title, ch:c[1], grp:groupOf(c[2]),
             date:(s.publishedAt || '').slice(0,10).replace(/-/g,'/'), vid:id,
             bg:'url(https://i.ytimg.com/vi/' + id + '/mqdefault.jpg) center/cover'});
         });
-        return v.length ? {name:c[1], sec:c[2], v:v} : null;
+        if(!v.length) return null;
+        return {name:c[1], ini:c[1].charAt(0), img:inf.img, url:inf.url, sec:c[2], v:v};
       });
     }).catch(function(e){
       if(tries < 1) return load(c, tries + 1);
@@ -296,27 +320,76 @@
       return null;
     });
   }
-  function apply(res){
-    var chans = [];
+  function byDate(a, b){ return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; }
+
+  function build(res){
+    CHANS = [];
     YT.length = 0;
     res.forEach(function(r){
       if(!r) return;
-      chans.push({name:r.name, ini:r.name.charAt(0), blurb:r.sec});
+      CHANS.push({name:r.name, ini:r.ini, img:r.img, url:r.url, sec:r.sec, group:groupOf(r.sec)});
       r.v.forEach(function(x){ YT.push(x); });
     });
-    if(chans.length){
-      window.CHANNELS = chans;
-      try{ if(window.S && S.screen === 'home') render(); }catch(e){}
-    }
+    YT.sort(byDate);
+    window.CHANNELS = CHANS.map(function(c){ return {name:c.name, ini:c.ini, blurb:c.group}; });
+  }
+
+  // ---------- الرئيسية ----------
+  SCR.home = function(){
+    var movies = window.vids().filter(function(v){ return String(v.id).indexOf('yt-') !== 0; });
+    var s = '';
+    if(movies.length) s += sec('أحدث الملخصات', row(movies.slice(0, 8), vcard));
+    if(YT.length) s += sec('أحدث القيديوهات', row(YT.slice(0, 12), vcard));
+    MAIN.forEach(function(g){
+      var vs = YT.filter(function(x){ return x.grp === g; }).slice(0, 12);
+      if(vs.length) s += sec(esc(g), row(vs, vcard));
+    });
+    return s;
+  };
+
+  // ---------- الأقسام ----------
+  window.csOpen = function(g){ CHF = g; S.screen = 'channels'; render(); };
+  window.csChip = function(g){ CHF = g; render(); };
+  SCR.cats = function(){
+    var cards = MAIN.concat(['المزيد']).map(function(g){
+      var n = CHANS.filter(function(c){ return c.group === g; }).length;
+      return '<button class="cs-cat" onclick="csOpen(\'' + g + '\')"><b>' + esc(g) + '</b><small>' + n + ' قناة</small></button>';
+    }).join('');
+    return sec('الأقسام', '<div class="cs-cats">' + cards + '</div>');
+  };
+
+  // ---------- القنوات ----------
+  SCR.channels = function(){
+    var chips = ['الكل'].concat(MAIN, ['المزيد']).map(function(g){
+      return '<button class="cs-chip' + (CHF === g ? ' on' : '') + '" onclick="csChip(\'' + g + '\')">' + esc(g) + '</button>';
+    }).join('');
+    var list = CHANS.filter(function(c){ return CHF === 'الكل' || c.group === CHF; });
+    var grid = list.map(function(c){
+      var av = c.img ? '<img src="' + c.img + '" alt="">' : '<span>' + esc(c.ini) + '</span>';
+      return '<a class="cs-ch" href="' + c.url + '" target="_blank" rel="noopener">' + av + '<b>' + esc(c.name) + '</b></a>';
+    }).join('');
+    if(!CHANS.length) return '<p style="text-align:center;color:#9a9aa5">جاري تحميل القنوات...</p>';
+    return '<div class="cs-chips">' + chips + '</div><div class="cs-grid">' + grid + '</div>';
+  };
+
+  // ---------- التحميل والكاش ----------
+  function apply(res){
+    build(res);
+    try{ render(); }catch(e){}
   }
   var cached = null;
-  try{ cached = JSON.parse(localStorage.getItem('ytc3') || 'null'); }catch(e){}
+  try{ cached = JSON.parse(localStorage.getItem('ytc5') || 'null'); }catch(e){}
   if(cached){
     var ttl = (cached.f ? PARTIAL_HOURS : HOURS) * 3600000;
     if(Date.now() - cached.t < ttl){ apply(cached.d); return; }
   }
-  Promise.all(CH.map(function(c){ return load(c, 0); })).then(function(res){
+  var seen = [];
+  var UNIQUE = RAW.filter(function(c){
+    if(seen.indexOf(c[0]) >= 0) return false;
+    seen.push(c[0]); return true;
+  });
+  Promise.all(UNIQUE.map(function(c){ return load(c, 0); })).then(function(res){
     apply(res);
-    try{ localStorage.setItem('ytc3', JSON.stringify({t:Date.now(), d:res, f:FAILED.length})); }catch(e){}
+    try{ localStorage.setItem('ytc5', JSON.stringify({t:Date.now(), d:res, f:FAILED.length})); }catch(e){}
   });
 })();
