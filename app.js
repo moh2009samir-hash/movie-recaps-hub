@@ -16,7 +16,7 @@ function row(l,fn){return '<div class="row">'+l.map(fn).join('')+'</div>'}
 function sec(t,h){return '<div class="section"><h2>'+t+'</h2>'+h+'</div>'}
 function head(t,to){return '<div style="display:flex;align-items:center;gap:4px"><button class="iconbtn" onclick="go(\''+to+'\')">'+ic(P.chev)+'</button><h1 style="margin:0">'+t+'</h1></div>'}
 function home(){var h=MOVIES.filter(function(m){return m.pick})[0]||MOVIES[0];var V=vids();var top=MOVIES.slice().sort(function(a,b){return b.rating-a.rating}).slice(0,6);
-var s='<div class="topbar"><div class="brand">MOVIE RECAPS<span> HUB</span></div><div><button class="iconbtn" onclick="go(\'search\')">'+ic(P.search)+'</button><button class="iconbtn" onclick="go(\'settings\')">'+ic(P.menu)+'</button></div></div>';
+var s='';
 if(h){s+='<div class="hero" style="background:'+bg(h)+'"><div class="shade"></div><div class="info"><div class="tag">اختيار المشرف</div><h1>'+esc(h.title)+'</h1><div class="muted">'+h.year+' · '+esc(h.cat)+' · '+h.mins+' دقيقة</div><div><button class="btn" onclick="openM('+h.id+')">عرض التفاصيل</button></div></div></div>'}
 s+='<div class="chips">'+CATS.map(function(c){return '<button class="chip" onclick="pickCat(\''+c+'\')">'+c+'</button>'}).join('')+'</div>';
 s+=sec('أحدث الملخصات',row(MOVIES.slice().reverse(),poster));
@@ -36,12 +36,40 @@ function settings(){return '<div class="pad">'+head('الإعدادات','home')
 function admin(){var h='<div class="pad">'+head('لوحة المشرف','settings');
 if(!S.admin){return h+'<div class="card" style="margin-top:16px"><p class="muted" style="line-height:1.7">هذه المنطقة للمشرف فقط. سيتم الدخول بحساب Firebase في النسخة الحقيقية.</p><button class="btn" style="width:100%" onclick="S.admin=true;render()">دخول (تجريبي)</button></div></div>'}
 return h+'<div class="card" style="margin-top:16px"><b>إضافة فيلم</b><p class="muted">اسم الفيلم</p><input class="input" id="nt"><p class="muted">تقييم المشرف من 10</p><input class="input" id="nr" value="8.0" inputmode="decimal"><button class="btn" style="width:100%;margin-top:12px" onclick="addM()">نشر الفيلم</button></div><b>الأفلام المنشورة</b>'+MOVIES.map(function(m){return '<div class="item" style="margin-top:10px"><div><b>'+esc(m.title)+'</b><div class="muted">'+m.year+' · '+m.rating.toFixed(1)+' / 10</div></div><button class="btn ghost" onclick="delM('+m.id+')">حذف</button></div>'}).join('')+'<button class="btn ghost" style="width:100%;margin-top:14px" onclick="S.admin=false;render()">تسجيل الخروج</button></div>'}
-function nav(){return '<nav class="nav">'+NAV.map(function(n){return '<button class="'+(S.screen===n[0]?'on':'')+'" onclick="go(\''+n[0]+'\')">'+ic(P[n[0]])+'<span>'+n[1]+'</span></button>'}).join('')+'</nav>'}
+// ---------- الهيدر والتابات والشريط السفلي (شكل Club Stream) ----------
+function topbar(){
+  var tabs=[['home','الرئيسية'],['cats','الأقسام'],['channels','القنوات']];
+  return '<div class="hd"><div class="hrow"><button class="iconbtn" onclick="go(\'search\')">'+ic(P.search)+'</button>'+
+    '<div class="logo2">Club <b>Stream</b></div><button class="iconbtn" onclick="go(\'favs\')">'+ic(P.favs)+'</button></div>'+
+    '<div class="tabs2">'+tabs.map(function(t){return '<button class="'+(S.screen===t[0]?'on':'')+'" onclick="go(\''+t[0]+'\')">'+t[1]+'</button>'}).join('')+
+    '<button class="gear" onclick="go(\'settings\')">'+ic(P.menu)+'</button></div></div>';
+}
+function playLatest(){var V=window.vids();if(V&&V.length)play(V[0].id);}
+function nav(){
+  var items=[['home','الرئيسية',P.home],['cats','الأقسام',P.cats],null,['channels','القنوات',P.channels],['settings','المزيد',P.menu]];
+  return '<nav class="nav2">'+items.map(function(n){
+    if(!n) return '<button class="playc" onclick="playLatest()" aria-label="تشغيل">'+ic('M8 5v14l11-7z',true)+'</button>';
+    return '<button class="'+(S.screen===n[0]?'on':'')+'" onclick="go(\''+n[0]+'\')">'+ic(n[2])+'<span>'+n[1]+'</span></button>';
+  }).join('')+'</nav>';
+}
+(function(){
+  var css='.hd{padding:6px 0 4px}.hrow{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}'+
+    '.logo2{font-size:24px;font-weight:800;color:#fff}.logo2 b{color:#A855F7}'+
+    '.tabs2{display:flex;gap:8px;align-items:center;overflow-x:auto;padding-bottom:10px}'+
+    '.tabs2 button{flex:none;border:0;background:#19191F;color:#ddd;border-radius:22px;padding:9px 16px;font-size:14px;cursor:pointer}'+
+    '.tabs2 button.on{background:#7C3AED;color:#fff}.tabs2 .gear{padding:9px 11px;display:flex}'+
+    '.screen{padding-bottom:90px}'+
+    '.nav2{position:fixed;left:0;right:0;bottom:0;height:66px;display:flex;justify-content:space-around;align-items:center;background:#0f0f14;border-top:1px solid #2a2a33;z-index:50}'+
+    '.nav2>button{background:none;border:0;color:#9a9aa5;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;flex:1;cursor:pointer}'+
+    '.nav2>button.on{color:#A855F7}'+
+    '.nav2 .playc{flex:none;flex-basis:58px;width:58px;height:58px;border-radius:50%;background:#7C3AED;color:#fff;margin-top:-24px;justify-content:center;box-shadow:0 0 18px rgba(124,58,237,.6)}';
+  var st=document.createElement('style'); st.textContent=css; document.head.appendChild(st);
+})();
 var SCR={home:home,channels:channels,search:search,cats:cats,favs:favs,details:details,player:player,settings:settings,admin:admin};
 function render(){var a=document.getElementById('app');
 if(S.screen==='splash'){a.innerHTML='<div class="splash"><div class="logo">MOVIE RECAPS<small>HUB</small></div><div class="muted">ملخصات الأفلام في مكان واحد</div></div>';return}
 var main=['home','channels','search','cats','favs'].indexOf(S.screen)>=0;
-a.innerHTML='<div class="screen">'+SCR[S.screen]()+'</div>'+(main?nav():'')}
+a.innerHTML='<div class="screen">'+(main?topbar():'')+SCR[S.screen]()+'</div>'+(main?nav():'')}
 function go(s){S.screen=s;render()}
 function openM(id){S.sel=id;S.from=S.screen;S.screen='details';render()}
 function play(id){S.vid=id;S.back=S.screen;S.screen='player';render()}
