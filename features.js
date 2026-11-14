@@ -1,4 +1,4 @@
-// Club Stream: مقدمة أول مرة + عداد الوقت + ريلز + متابعة + حسابي + الإعدادات
+// Club Stream: مقدمة أول مرة + عداد الوقت + الرئيسية العشوائية + ريلز + متابعة + حسابي + الإعدادات
 (function(){
   // ---------- الستايل ----------
   var css = '' +
@@ -25,8 +25,8 @@
     '.cs-chrow{display:flex;justify-content:space-between;align-items:center;gap:10px;background:#19191F;border:1px solid #2a2a33;border-radius:12px;padding:12px 14px;margin-bottom:8px;color:#fff}' +
     '.cs-chrow b{font-size:14px}' +
     '.cs-chrow button{background:#2a2a33;color:#fff;border:0;border-radius:10px;padding:7px 12px;font-family:inherit;font-size:13px;cursor:pointer}' +
-    '#cs_reels{position:fixed;inset:0;background:#000;z-index:300;overflow-y:auto;scroll-snap-type:y mandatory}' +
-    '.cs-rl{position:relative;height:100vh;height:100dvh;scroll-snap-align:start;background:#000;overflow:hidden}' +
+    '#cs_reels{position:fixed;left:0;right:0;top:0;bottom:66px;background:#000;z-index:300;overflow-y:auto;scroll-snap-type:y mandatory}' +
+    '.cs-rl{position:relative;height:100%;scroll-snap-align:start;background:#000;overflow:hidden}' +
     '.cs-rbg{position:absolute;inset:0;background-size:cover;background-position:center;filter:blur(18px) brightness(.5)}' +
     '.cs-rl iframe{position:absolute;inset:0;width:100%;height:100%;border:0}' +
     '.cs-rplay{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:76px;height:76px;border-radius:50%;border:0;background:rgba(124,58,237,.92);color:#fff;font-size:30px;cursor:pointer;padding-left:6px}' +
@@ -34,6 +34,8 @@
     '.cs-cov{position:absolute;left:0;right:0;z-index:2;pointer-events:auto;cursor:default}' +
     '.cs-cov.t{top:0;height:60px;background:#000}' +
     '.cs-cov.b{bottom:0;height:95px;background:linear-gradient(transparent,#000 45%)}' +
+    '.cs-cov.pt{top:0;height:64px;background:#000}' +
+    '.cs-cov.pb{bottom:0;height:64px;background:#000}' +
     '.cs-rinfo{position:absolute;bottom:20px;right:14px;left:70px;z-index:3;color:#fff;text-align:right;text-shadow:0 1px 4px #000;pointer-events:none}' +
     '.cs-rinfo b{display:block;font-size:15px;line-height:1.4}' +
     '.cs-rinfo small{display:block;font-size:12px;color:#ddd}' +
@@ -97,6 +99,9 @@
   window.csxRF = function(btn){ window.csxToggle(btn.getAttribute('data-ch'), btn); };
   window.csxUnf = function(btn){ window.csxToggle(btn.getAttribute('data-ch'), null); };
 
+  // ---------- رجوع: دايماً يرجع للرئيسية ----------
+  window.back = function(){ S.screen = 'home'; render(); };
+
   // ---------- الهيدر (بحث + القائمة فوق) ----------
   window.topbar = function(){
     return '<div class="topbar"><div class="brand">Club<span> Stream</span></div>' +
@@ -105,7 +110,7 @@
       '<button class="iconbtn" aria-label="القائمة" onclick="go(\'settings\')">' + ic(P.menu) + '</button></div></div>';
   };
 
-  // ---------- الشريط السفلي: حسابي بدل المزيد ----------
+  // ---------- الشريط السفلي: ثابت دايماً (حتى في الريلز والفيديو) ----------
   window.nav = function(){
     var items = [['home','الرئيسية',P.home],['cats','الأقسام',P.cats],null,['channels','القنوات',P.channels],['account','حسابي',P.account]];
     return '<nav class="nav2">' + items.map(function(n){
@@ -114,15 +119,34 @@
     }).join('') + '</nav>';
   };
 
-  // ---------- الرندر (بيدعم صفحة حسابي) ----------
+  // ---------- تغطية شعار يوتيوب في مشغل الفيديو العادي ----------
+  function coverFrames(){
+    var fr = document.querySelectorAll('#app iframe');
+    Array.prototype.forEach.call(fr, function(f){
+      var src = f.getAttribute('src') || '';
+      if(src.indexOf('youtube') < 0) return;
+      if(f.closest && f.closest('#cs_reels')) return;
+      var p = f.parentNode;
+      if(!p || p.getAttribute('data-cov')) return;
+      p.setAttribute('data-cov', '1');
+      if(getComputedStyle(p).position === 'static') p.style.position = 'relative';
+      p.style.overflow = 'hidden';
+      p.insertAdjacentHTML('beforeend', '<div class="cs-cov pt"></div><div class="cs-cov pb"></div>');
+    });
+  }
+  setInterval(coverFrames, 1000);
+
+  // ---------- الرندر ----------
   window.render = function(){
     var a = document.getElementById('app');
     if(S.screen === 'splash'){
       a.innerHTML = '<div class="splash"><div class="logo">CLUB<small>STREAM</small></div><div class="muted">ملخصات ومحتوى من أفضل القنوات في مكان واحد</div></div>';
       return;
     }
-    var main = ['home','channels','search','cats','favs','account'].indexOf(S.screen) >= 0;
-    a.innerHTML = '<div class="screen">' + (main ? topbar() : '') + SCR[S.screen]() + '</div>' + (main ? nav() : '');
+    var main = ['home','channels','search','cats','favs','account','player','reels'].indexOf(S.screen) >= 0;
+    var top = main && S.screen !== 'reels';
+    a.innerHTML = '<div class="screen">' + (top ? topbar() : '') + SCR[S.screen]() + '</div>' + (main ? nav() : '');
+    setTimeout(coverFrames, 300);
   };
 
   // ---------- مقدمة أول مرة ----------
@@ -130,10 +154,9 @@
     '<h3>أهلاً بيك في Club Stream</h3>' +
       '<p>ده تطبيق بيجمع لك أحسن قنوات يوتيوب في مكان واحد، من أفلام ومسلسلات ورياضة وأنمي وتقنية وعلوم وتلاوات وسفر وطبخ، وأكتر.</p>',
     '<h3>إيه اللي جوه التطبيق؟</h3>' +
-      '<ul><li>كل قناة ليها صفحة فيها كل فيديوهاتها وشورتسها.</li>' +
-      '<li>الأقسام مرتبة لوحدها، تختار اللي يهمك.</li>' +
+      '<ul><li>الرئيسية فيها فيديوهات عشوائية بلا نهاية.</li>' +
       '<li>زرار الريلز في النص بيفتحلك شورتس طولي بلا نهاية.</li>' +
-      '<li>تقدر تتابع أي قناة، ويظهرلك كل جديدها في صفحة حسابي.</li></ul>',
+      '<li>تقدر تتابع أي قناة، وتلاقيها في صفحة حسابي.</li></ul>',
     '<h3>ليه التطبيق ده؟</h3>' +
       '<p>أنا <b>Mohammed Samir</b>، صانع ومشرف البرنامج. هدفه إنه يساعدك تتخلص من التعفن الدماغي، ويخليك تشوف محتوى مفيد ومسلي.</p>' +
       '<p>خد وقتك واختار اللي يفيدك، ومتنساش تتمشى شوية بعيد عن الشاشة.</p>'
@@ -186,6 +209,11 @@
   };
 
   // ---------- حسابي: تسجيل الدخول + القنوات اللي بتتابعها ----------
+  function loginBox(){
+    var u = getUserName();
+    if(u) return '<div class="cs-login"><span>أهلاً يا <b>' + esc(u) + '</b></span><button onclick="csLogout()">خروج</button></div>';
+    return '<div class="cs-login"><input id="cs_name" placeholder="اكتب اسمك عشان تتابع القنوات"><button onclick="csLogin()">دخول</button></div>';
+  }
   SCR.account = function(){
     var u = getUserName(), f = getFollowList();
     var h = '<div class="pad"><h1>حسابي</h1>';
@@ -213,7 +241,7 @@
     return h + '</div>';
   };
 
-  // ---------- الريلز: شورتس طولي بلا نهاية + زرار متابعة + تغطية شعار يوتيوب ----------
+  // ---------- الريلز: شورتس طولي بلا نهاية + زرار متابعة ----------
   var REELS = [], RI = 0, ROBS = null, RLOBS = null;
   function reelItem(v){
     var fol = isFollowed(v.ch);
@@ -259,7 +287,6 @@
         entries.forEach(function(en){
           var el = en.target;
           if(en.isIntersecting && en.intersectionRatio > 0.6){
-            // شغّل الحالي ووقّف الباقي عشان مفيش صوت فوق بعض
             Array.prototype.forEach.call(root.querySelectorAll('.cs-rl.on'), function(o){
               if(o !== el) unloadReel(o);
             });
@@ -301,13 +328,52 @@
     render();
   };
 
-  // ---------- صفحة الفيديو: فيديوهات مقترحة بلا نهاية ----------
-  var FEED = [], FEED_I = 0, OBS = null;
+  // ---------- كروت الفيديو (مشتركة) ----------
   function feedCard(v){
     return '<button class="cs-fc" onclick="play(\'' + v.id + '\')">' +
       '<span class="cs-fi" style="background:' + (v.bg || '#19191F') + '"></span>' +
       '<b>' + esc(v.title) + '</b><small>' + esc(v.ch || '') + '</small></button>';
   }
+
+  // ---------- الرئيسية: فيديوهات عشوائية بلا نهاية ----------
+  var HF = [], HI = 0, HOBS = null, HTRY = 0;
+  function fillHome(){
+    var g = document.getElementById('cs_hgrid');
+    if(!g || !HF.length) return;
+    var html = '';
+    for(var k = 0; k < 12; k++){
+      if(HI >= HF.length){ HF = shuffle(HF.slice()); HI = 0; }
+      html += feedCard(HF[HI++]);
+    }
+    g.insertAdjacentHTML('beforeend', html);
+  }
+  SCR.home = function(){
+    var list = window.vids().filter(function(v){ return String(v.id).indexOf('yt-') === 0; });
+    if(!list.length){
+      // الفيديوهات لسه بتتحمل: نعيد الرسم شوية لحد ما تيجي
+      if(HTRY++ < 20) setTimeout(function(){ if(S.screen === 'home') render(); }, 1000);
+      return '<p style="text-align:center;color:#9a9aa5;padding:40px 0">جاري تحميل الفيديوهات...</p>';
+    }
+    HTRY = 0;
+    HF = shuffle(list.slice());
+    HI = 0;
+    setTimeout(function(){
+      fillHome();
+      var sen = document.getElementById('cs_hmore');
+      if(HOBS) HOBS.disconnect();
+      if(sen && 'IntersectionObserver' in window){
+        HOBS = new IntersectionObserver(function(entries){
+          if(entries[0].isIntersecting) fillHome();
+        }, {rootMargin: '300px'});
+        HOBS.observe(sen);
+      }
+    }, 0);
+    return '<div class="cs-feedttl">فيديوهات عشوائية</div>' +
+      '<div class="cs-fgrid" id="cs_hgrid"></div><div id="cs_hmore" style="height:1px"></div>';
+  };
+
+  // ---------- صفحة الفيديو: فيديوهات مقترحة بلا نهاية ----------
+  var FEED = [], FEED_I = 0, OBS = null;
   function fillFeed(){
     var g = document.getElementById('cs_fgrid');
     if(!g || !FEED.length) return;
@@ -338,59 +404,6 @@
     }, 0);
     return page + '<div class="cs-feedttl">فيديوهات مقترحة</div>' +
       '<div class="cs-fgrid" id="cs_fgrid"></div><div id="cs_more" style="height:1px"></div>';
-  };
-
-  // ---------- الرئيسية: لو عامل حساب ومتابع قنوات، تظهر بس القنوات دي (من غير صف الشورتس) ----------
-  var MAIN = ['الأفلام والمسلسلات','الرياضة','الألعاب','الأنمي','التقنية','العلوم','الأخبار'];
-  var CAT_STYLE = {
-    'الأفلام والمسلسلات':['#7C3AED','#2e1065','🎬'], 'الرياضة':['#15803d','#052e16','⚽'],
-    'الألعاب':['#2563eb','#0b1d4d','🎮'], 'الأنمي':['#ea580c','#431407','🍥'],
-    'التقنية':['#0891b2','#083344','💻'], 'العلوم':['#4f46e5','#1e1b4b','🔭'],
-    'الأخبار':['#b91c1c','#3f0d0d','📰'], 'شورتس':['#E50914','#450a0a','▶']
-  };
-  function catBg2(g){ var s = CAT_STYLE[g] || CAT_STYLE['شورتس']; return 'linear-gradient(135deg,' + s[0] + ',' + s[1] + ')'; }
-  function catIco2(g){ var s = CAT_STYLE[g] || CAT_STYLE['شورتس']; return s[2]; }
-  function loginBox(){
-    var u = getUserName();
-    if(u) return '<div class="cs-login"><span>أهلاً يا <b>' + esc(u) + '</b></span><button onclick="csLogout()">خروج</button></div>';
-    return '<div class="cs-login"><input id="cs_name" placeholder="اكتب اسمك عشان تتابع القنوات"><button onclick="csLogin()">دخول</button></div>';
-  }
-  function miniCard(v){
-    return '<button class="cs-fc" onclick="play(\'' + v.id + '\')"><span class="cs-fi" style="background:' + (v.bg || '#19191F') + '"></span><b>' + esc(v.title) + '</b><small>' + esc(v.ch || '') + '</small></button>';
-  }
-  SCR.home = function(){
-    var u = getUserName(), f = getFollowList();
-    var filt = !!(u && f.length);
-    function mine(x){ return !filt || f.indexOf(x.ch) >= 0; }
-    var yt = window.vids().filter(function(v){ return String(v.id).indexOf('yt-') === 0 && mine(v); });
-    var s = loginBox();
-    if(u && !f.length){
-      return s + '<div class="cs-card"><h4>ابدأ بمتابعة القنوات</h4><p>اختار القنوات اللي تحبها، وهتظهر هنا فيديوهاتها بس.</p></div>' +
-        '<button class="cs-back" onclick="go(\'channels\')">تصفح القنوات</button>';
-    }
-    if(filt && !yt.length){
-      return s + '<p style="text-align:center;color:#9a9aa5;padding:30px 0">القنوات اللي متابعها لسه مفيهاش فيديوهات</p>';
-    }
-    var h = yt[0];
-    if(h){
-      s += '<a class="cs-hero" href="javascript:void(0)" onclick="play(\'' + h.id + '\')"><span class="cs-badge">جديد</span>' +
-        '<div class="cs-hbody"><h2>' + esc(h.title) + '</h2><p>' + esc(h.ch || '') + '</p><span class="cs-go">▶ مشاهدة الآن</span></div></a>';
-    }
-    if(yt.length){
-      s += '<div class="cs-feedttl">أحدث الفيديوهات</div><div class="cs-fgrid">' + yt.slice(0, 6).map(miniCard).join('') + '</div>';
-    }
-    var cats = MAIN.concat(['شورتس']).map(function(g){
-      var isS = g === 'شورتس';
-      return '<button class="cs-catg" style="background:' + catBg2(g) + '" onclick="' + (isS ? "pickCat('شورتس')" : "csOpen('" + g + "')") + '"><span class="cs-ico">' + catIco2(g) + '</span><b>' + esc(g) + '</b></button>';
-    }).join('');
-    s += '<div class="cs-feedttl">الأقسام</div><div class="cs-cats">' + cats + '</div>';
-    MAIN.forEach(function(g){
-      var vs = yt.filter(function(x){ return x.grp === g; }).slice(0, 12);
-      if(vs.length){
-        s += '<div class="cs-feedttl">' + esc(g) + '</div><div class="cs-fgrid">' + vs.map(miniCard).join('') + '</div>';
-      }
-    });
-    return s;
   };
 
   // ---------- تشغيل ----------
