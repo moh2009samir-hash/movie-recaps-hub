@@ -291,7 +291,42 @@
     '.cs-chbtn{background:none;border:0;cursor:pointer;padding:0;font:inherit;color:#fff}' +
     '.cs-head{display:flex;align-items:center;gap:12px;margin:8px 0 16px}' +
     '.cs-head img,.cs-head span{width:72px;height:72px;border-radius:50%;object-fit:cover;background:#E50914;color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;flex:none}' +
-    '.cs-head b{font-size:18px;display:block}.cs-head small{color:#9a9aa5}';
+    '.cs-head b{font-size:18px;display:block}.cs-head small{color:#9a9aa5}' +
+    '.cs-hero{position:relative;height:200px;border-radius:18px;overflow:hidden;margin:4px 0 18px;background:linear-gradient(135deg,#4c1d95,#7C3AED 45%,#E50914);display:flex;align-items:flex-end;color:#fff;text-decoration:none}' +
+    '.cs-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,.85),rgba(0,0,0,0) 65%)}' +
+    '.cs-hero .cs-hbody{position:relative;z-index:1;padding:16px;width:100%}' +
+    '.cs-hero .cs-badge{position:absolute;top:12px;right:12px;z-index:1;background:#E50914;color:#fff;font-size:12px;padding:3px 10px;border-radius:8px}' +
+    '.cs-hero h2{margin:0 0 4px;font-size:20px;line-height:1.4}' +
+    '.cs-hero p{margin:0 0 12px;color:#ddd;font-size:13px}' +
+    '.cs-hero .cs-go{display:inline-block;background:#fff;color:#111;border-radius:22px;padding:7px 16px;font-size:14px;font-weight:600}' +
+    '.cs-tile{position:relative;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#19191F}' +
+    '.cs-tile .cs-dur{position:absolute;bottom:6px;left:6px;background:rgba(0,0,0,.8);color:#fff;font-size:11px;padding:2px 6px;border-radius:5px}' +
+    '.cs-sq{width:78px;height:78px;border-radius:18px;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:800;color:#fff;background:linear-gradient(135deg,#7C3AED,#E50914);overflow:hidden}' +
+    '.cs-sq img{width:100%;height:100%;object-fit:cover}' +
+    '.cs-ch.cs-sqw{gap:6px}' +
+    '.cs-catg{border:0;color:#fff;border-radius:16px;padding:0;min-height:110px;text-align:right;cursor:pointer;display:flex;flex-direction:column;justify-content:flex-end;padding:14px;position:relative;overflow:hidden}' +
+    '.cs-catg .cs-ico{position:absolute;top:10px;left:12px;font-size:34px;opacity:.9}' +
+    '.cs-catg b{font-size:16px;position:relative}.cs-catg small{font-size:12px;opacity:.85;position:relative}' +
+    '.cs-secttl{display:flex;align-items:center;justify-content:space-between;margin:18px 0 10px;font-size:17px;font-weight:700}' +
+    '.cs-follow{margin:0 0 14px;background:#7C3AED;color:#fff;border:1px solid #7C3AED;border-radius:22px;padding:8px 18px;font-size:14px;cursor:pointer}' +
+    '.cs-follow.on{background:#19191F;border-color:#7C3AED}' +
+    '.cs-login{display:flex;gap:8px;align-items:center;justify-content:space-between;background:#19191F;border:1px solid #2a2a33;border-radius:14px;padding:10px 12px;margin:4px 0 14px}' +
+    '.cs-login input{flex:1;min-width:0;background:#0f0f14;color:#fff;border:1px solid #2a2a33;border-radius:10px;padding:9px 10px;font-size:14px}' +
+    '.cs-login button{background:#7C3AED;color:#fff;border:0;border-radius:10px;padding:9px 14px;cursor:pointer}';
+
+  // ألوان وأيقونات الأقسام (زي الصورة)
+  var CAT_STYLE = {
+    'الأفلام والمسلسلات':['#7C3AED','#2e1065','🎬'],
+    'الرياضة':['#15803d','#052e16','⚽'],
+    'الألعاب':['#2563eb','#0b1d4d','🎮'],
+    'الأنمي':['#ea580c','#431407','🍥'],
+    'التقنية':['#0891b2','#083344','💻'],
+    'العلوم':['#4f46e5','#1e1b4b','🔭'],
+    'شورتس':['#E50914','#450a0a','▶'],
+    'المزيد':['#525252','#171717','✦']
+  };
+  function catBg(g){ var s = CAT_STYLE[g] || CAT_STYLE['المزيد']; return 'linear-gradient(135deg,' + s[0] + ',' + s[1] + ')'; }
+  function catIco(g){ var s = CAT_STYLE[g] || CAT_STYLE['المزيد']; return s[2]; }
   var st = document.createElement('style'); st.textContent = css; document.head.appendChild(st);
 
   function wrapped(){ return base().concat(YT); }
@@ -339,7 +374,7 @@
         both[0].forEach(function(it){ var x = mk(it, c, false); if(x) v.push(x); });
         both[1].forEach(function(it){ var x = mk(it, c, true); if(x) sh.push(x); });
         if(!v.length && !sh.length) return null;
-        return {name:c[1], ini:c[1].charAt(0), img:inf.img, url:inf.url, sec:c[2], v:v, sh:sh};
+        return {name:c[1], ini:c[1].charAt(0), img:inf.img, url:inf.url, sec:c[2], v:v, sh:sh, up:inf.up};
       });
     }).catch(function(e){
       if(tries < 1) return load(c, tries + 1);
@@ -357,7 +392,7 @@
     SHORT_IDS = {};
     res.forEach(function(r){
       if(!r) return;
-      CHANS.push({name:r.name, ini:r.ini, img:r.img, url:r.url, sec:r.sec, group:groupOf(r.sec), v:r.v, sh:r.sh || []});
+      CHANS.push({name:r.name, ini:r.ini, img:r.img, url:r.url, sec:r.sec, group:groupOf(r.sec), v:r.v, sh:r.sh || [], up:r.up});
       r.v.forEach(function(x){ YT.push(x); });
       (r.sh || []).forEach(function(x){ SHORTS.push(x); SHORT_IDS[x.vid] = true; });
     });
@@ -366,13 +401,112 @@
     window.CHANNELS = CHANS.map(function(c){ return {name:c.name, ini:c.ini, blurb:c.group}; });
   }
 
+  // ---------- كل فيديوهات القناة + الشورتس (تتحمل عند الدخول) ----------
+  var ALL = {};
+  function pages(pid, out, tok, max){
+    if(!pid) return Promise.resolve(out);
+    var url = 'playlistItems?part=snippet&maxResults=50&playlistId=' + pid + (tok ? '&pageToken=' + tok : '');
+    return api(url).then(function(p){
+      if(p.error){ throw new Error(p.error.message); }
+      (p.items || []).forEach(function(it){ out.push(it); });
+      if(p.nextPageToken && out.length < max) return pages(pid, out, p.nextPageToken, max);
+      return out;
+    });
+  }
+  function loadAll(c){
+    ALL[c.name] = {v:[], sh:[], done:false};
+    var up = c.up || '';
+    Promise.all([
+      pages(up, [], null, 300),
+      pages(up.replace(/^UU/, 'UUSH'), [], null, 300).catch(function(){ return []; })
+    ]).then(function(b){
+      var tup = [null, c.name, c.sec];
+      ALL[c.name] = {
+        v: b[0].map(function(it){ return mk(it, tup, false); }).filter(Boolean),
+        sh: b[1].map(function(it){ return mk(it, tup, true); }).filter(Boolean),
+        done: true
+      };
+      render();
+    }).catch(function(){
+      ALL[c.name] = {v:[], sh:[], done:true};
+      render();
+    });
+  }
+
+  // ---------- الدخول بالاسم والمتابعة ----------
+  var USER_KEY = 'cs_user';
+  function getUser(){ try{ return localStorage.getItem(USER_KEY) || ''; }catch(e){ return ''; } }
+  function getFollows(){
+    var u = getUser(); if(!u) return [];
+    try{ return JSON.parse(localStorage.getItem('cs_f_' + u) || '[]'); }catch(e){ return []; }
+  }
+  function isFollow(name){ return getFollows().indexOf(name) >= 0; }
+  window.csLogin = function(){
+    var el = document.getElementById('cs_name');
+    var n = ((el && el.value) || '').trim();
+    if(!n) return;
+    try{ localStorage.setItem(USER_KEY, n); }catch(e){}
+    render();
+  };
+  window.csLogout = function(){
+    try{ localStorage.removeItem(USER_KEY); }catch(e){}
+    render();
+  };
+  window.csFollow = function(i){
+    var u = getUser();
+    if(!u){ alert('ادخل باسمك من الرئيسية الأول'); return; }
+    var c = CHANS[i]; if(!c) return;
+    var f = getFollows();
+    var k = f.indexOf(c.name);
+    if(k >= 0) f.splice(k, 1); else f.push(c.name);
+    try{ localStorage.setItem('cs_f_' + u, JSON.stringify(f)); }catch(e){}
+    render();
+  };
+  function loginHtml(){
+    var u = getUser();
+    if(u) return '<div class="cs-login"><span>أهلاً يا <b>' + esc(u) + '</b></span><button onclick="csLogout()">خروج</button></div>';
+    return '<div class="cs-login"><input id="cs_name" placeholder="اكتب اسمك عشان تتابع القنوات"><button onclick="csLogin()">دخول</button></div>';
+  }
+  function followHtml(){
+    var f = getFollows();
+    if(!f.length) return '';
+    var list = YT.filter(function(x){ return f.indexOf(x.ch) >= 0; }).slice(0, 12);
+    if(!list.length) return '';
+    return '<div class="cs-secttl"><span>من قنواتي المتابَعة</span></div><div class="cs-grid2">' + list.map(tile).join('') + '</div>';
+  }
+
   // ---------- الرئيسية ----------
+  function tile(v){
+    var bg = v.bg || '#19191F';
+    return '<button class="cs-tile" style="background:' + bg + ';border:0;padding:0;cursor:pointer" onclick="play(\'' + v.id + '\')">' +
+      '<span class="cs-dur">' + esc(v.ch || '') + '</span></button>' +
+      '<div style="font-size:13px;margin-top:6px;line-height:1.4;text-align:right">' + esc(v.title) + '</div>';
+  }
   SCR.home = function(){
     var movies = window.vids().filter(function(v){ return String(v.id).indexOf('yt-') !== 0; });
     var reg = YT.filter(function(x){ return !SHORT_IDS[x.vid]; });
-    var s = '';
+    var s = loginHtml() + followHtml();
+    // البانر الرئيسي: أحدث فيديو
+    var h = reg[0] || movies[0];
+    if(h){
+      s += '<a class="cs-hero" href="javascript:void(0)" onclick="play(\'' + h.id + '\')">' +
+        '<span class="cs-badge">جديد</span>' +
+        '<div class="cs-hbody"><h2>' + esc(h.title) + '</h2><p>' + esc(h.ch || '') + '</p>' +
+        '<span class="cs-go">▶ مشاهدة الآن</span></div></a>';
+    }
     if(movies.length) s += sec('أحدث الملخصات', row(movies.slice(0, 8), vcard));
-    if(reg.length) s += sec('أحدث القيديوهات', row(reg.slice(0, 12), vcard));
+    if(reg.length){
+      s += '<div class="cs-secttl"><span>أحدث الفيديوهات</span></div>' +
+        '<div class="cs-grid2">' + reg.slice(0, 6).map(tile).join('') + '</div>';
+    }
+    // الأقسام بالألوان
+    var cats = MAIN.concat(['شورتس']).map(function(g){
+      var isS = g === 'شورتس';
+      return '<button class="cs-catg" style="background:' + catBg(g) + '" onclick="' +
+        (isS ? "pickCat('شورتس')" : "csOpen('" + g + "')") + '">' +
+        '<span class="cs-ico">' + catIco(g) + '</span><b>' + esc(g) + '</b></button>';
+    }).join('');
+    s += '<div class="cs-secttl"><span>الأقسام</span></div><div class="cs-cats">' + cats + '</div>';
     if(SHORTS.length) s += sec('شورتس', row(SHORTS.slice(0, 12), vcard));
     MAIN.forEach(function(g){
       var vs = reg.filter(function(x){ return x.grp === g; }).slice(0, 12);
@@ -389,7 +523,7 @@
       var isS = g === 'شورتس';
       var n = isS ? SHORTS.length : CHANS.filter(function(c){ return c.group === g; }).length;
       var fn = isS ? 'pickCat(\'شورتس\')' : 'csOpen(\'' + g + '\')';
-      return '<button class="cs-cat" onclick="' + fn + '"><b>' + esc(g) + '</b><small>' + n + (isS ? ' فيديو' : ' قناة') + '</small></button>';
+      return '<button class="cs-catg" style="background:' + catBg(g) + '" onclick="' + fn + '"><span class="cs-ico">' + catIco(g) + '</span><b>' + esc(g) + '</b><small>' + n + (isS ? ' فيديو' : ' قناة') + '</small></button>';
     }).join('');
     return sec('الأقسام', '<div class="cs-cats">' + cards + '</div>');
   };
@@ -401,8 +535,8 @@
     }).join('');
     var list = CHANS.filter(function(c){ return CHF === 'الكل' || c.group === CHF; });
     var grid = list.map(function(c){
-      var av = c.img ? '<img src="' + c.img + '" alt="">' : '<span>' + esc(c.ini) + '</span>';
-      return '<button class="cs-ch cs-chbtn" onclick="csChan(' + CHANS.indexOf(c) + ')">' + av + '<b>' + esc(c.name) + '</b></button>';
+      var av = c.img ? '<img src="' + c.img + '" alt="">' : esc(c.ini);
+      return '<button class="cs-ch cs-chbtn cs-sqw" onclick="csChan(' + CHANS.indexOf(c) + ')"><span class="cs-sq" style="background:' + catBg(c.group) + '">' + av + '</span><b>' + esc(c.name) + '</b></button>';
     }).join('');
     if(!CHANS.length) return '<p style="text-align:center;color:#9a9aa5">جاري تحميل القنوات...</p>';
     return '<div class="cs-chips">' + chips + '</div><div class="cs-grid">' + grid + '</div>';
@@ -452,15 +586,24 @@
   window.csChan = function(i){ CHI = i; S.screen = 'chan'; render(); };
   SCR.chan = function(){
     var c = CHANS[CHI];
-    if(!c) return '<button class="cs-back" onclick="go(\'channels\')">رجوع</button><p style="text-align:center;color:#9a9aa5">القناة مش موجودة</p>';
-    var all = c.v.concat(c.sh || []).sort(byDate);
+    var back = '<button class="cs-back" onclick="go(\'channels\')">رجوع</button>';
+    if(!c) return back + '<p style="text-align:center;color:#9a9aa5">القناة مش موجودة</p>';
+    var fol = isFollow(c.name);
     var head = '<div class="cs-head">' +
       (c.img ? '<img src="' + c.img + '" alt="">' : '<span>' + esc(c.ini) + '</span>') +
-      '<div><b>' + esc(c.name) + '</b><small>' + esc(c.group) + ' · ' + all.length + ' فيديو</small></div></div>';
-    var body = all.length
-      ? '<div class="cs-grid2">' + all.map(vcard).join('') + '</div>'
-      : '<p style="text-align:center;color:#9a9aa5;padding:30px 0">مفيش فيديوهات لسه</p>';
-    return '<button class="cs-back" onclick="go(\'channels\')">رجوع</button>' + head + body;
+      '<div><b>' + esc(c.name) + '</b><small>' + esc(c.group) + '</small></div></div>' +
+      '<button class="cs-follow' + (fol ? ' on' : '') + '" onclick="csFollow(' + CHI + ')">' + (fol ? '✓ متابَع' : '+ متابعة') + '</button>';
+    var A = ALL[c.name];
+    if(!A){ loadAll(c); A = ALL[c.name]; }
+    if(!A.done) return back + head + '<p style="text-align:center;color:#9a9aa5;padding:30px 0">جاري تحميل كل فيديوهات القناة...</p>';
+    var body = '<div class="cs-secttl"><span>الفيديوهات (' + A.v.length + ')</span></div>';
+    body += A.v.length
+      ? '<div class="cs-grid2">' + A.v.map(vcard).join('') + '</div>'
+      : '<p style="text-align:center;color:#9a9aa5;padding:20px 0">مفيش فيديوهات لسه</p>';
+    if(A.sh.length){
+      body += '<div class="cs-secttl"><span>الشورتس (' + A.sh.length + ')</span></div><div class="cs-grid2">' + A.sh.map(vcard).join('') + '</div>';
+    }
+    return back + head + body;
   };
 
   // ---------- التحميل والكاش ----------
@@ -469,7 +612,7 @@
     try{ render(); }catch(e){}
   }
   var cached = null;
-  try{ cached = JSON.parse(localStorage.getItem('ytc7') || 'null'); }catch(e){}
+  try{ cached = JSON.parse(localStorage.getItem('ytc8') || 'null'); }catch(e){}
   if(cached){
     var ttl = (cached.f ? PARTIAL_HOURS : HOURS) * 3600000;
     if(Date.now() - cached.t < ttl){ apply(cached.d); return; }
@@ -481,6 +624,6 @@
   });
   Promise.all(UNIQUE.map(function(c){ return load(c, 0); })).then(function(res){
     apply(res);
-    try{ localStorage.setItem('ytc7', JSON.stringify({t:Date.now(), d:res, f:FAILED.length})); }catch(e){}
+    try{ localStorage.setItem('ytc8', JSON.stringify({t:Date.now(), d:res, f:FAILED.length})); }catch(e){}
   });
 })();
