@@ -67,7 +67,7 @@ function nav(){
 })();
 var SCR={home:home,channels:channels,search:search,cats:cats,favs:favs,details:details,player:player,settings:settings,admin:admin};
 function render(){var a=document.getElementById('app');
-if(S.screen==='splash'){a.innerHTML='<div class="splash"><div class="logo">MOVIE RECAPS<small>HUB</small></div><div class="muted">ملخصات الأفلام في مكان واحد</div></div>';return}
+if(S.screen==='splash'){a.innerHTML='<div class="splash"><div class="logo">CLUB<small>STREAM</small></div><div class="muted">ملخصات ومحتوى من أفضل القنوات في مكان واحد</div></div>';return}
 var main=['home','channels','search','cats','favs'].indexOf(S.screen)>=0;
 a.innerHTML='<div class="screen">'+(main?topbar():'')+SCR[S.screen]()+'</div>'+(main?nav():'')}
 function go(s){S.screen=s;render()}
