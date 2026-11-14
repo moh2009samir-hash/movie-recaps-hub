@@ -4,78 +4,69 @@
   // [الـ handle أو الـ ID, الاسم اللي هيظهر, القسم]
   var RAW = [
     ['Watchitmena','WATCH IT','ملخصات الأفلام والمسلسلات'],
-    ['FilmFeEl5amsena','فيلم في الخمسينة','ملخصات الأفلام والمسلسلات'],
+    ['film.feel.50','فيلم في الخمسينة','ملخصات الأفلام والمسلسلات'],
     ['FilmGamed','فيلم جامد','ملخصات الأفلام والمسلسلات'],
-    ['Mekawi','ملخصات مكاوي','ملخصات الأفلام والمسلسلات'],
+    ['UCqefjZSI4puqNd7S7jPLrFQ','ملخصات مكاوي','ملخصات الأفلام والمسلسلات'],
     ['GeorgeAshraf','جورج أشرف','ملخصات الأفلام والمسلسلات'],
-    ['Kokly','كوكلي','ملخصات الأفلام والمسلسلات'],
-    ['MoviesRoom','موفيز روم','ملخصات الأفلام والمسلسلات'],
-    ['HDDRAMA','HD DRAMA','ملخصات الأفلام والمسلسلات'],
-    ['AlKholasaExtra','الخلاصة إكسترا','ملخصات الأفلام والمسلسلات'],
-    ['FilmFeElBiko','فيلم في البيكو','ملخصات الأفلام والمسلسلات'],
-    ['Filmtchino','فيلمتشينو','ملخصات الأفلام والمسلسلات'],
-    ['FilmoAlaa','فيلمو علاء','ملخصات الأفلام والمسلسلات'],
+    ['mukhtarhassb','كوكلي','ملخصات الأفلام والمسلسلات'],
+    ['moviesroom1','موفيز روم','ملخصات الأفلام والمسلسلات'],
+    ['hddrama90','HD DRAMA','ملخصات الأفلام والمسلسلات'],
+    ['elkholasa_extra','الخلاصة إكسترا','ملخصات الأفلام والمسلسلات'],
+    ['filmfelbekoo','فيلم في البيكو','ملخصات الأفلام والمسلسلات'],
+    ['-filmtshino','فيلمتشينو','ملخصات الأفلام والمسلسلات'],
+    ['filmo3laa','فيلمو علاء','ملخصات الأفلام والمسلسلات'],
     ['FilmCaps','Film Caps','ملخصات الأفلام والمسلسلات'],
-    ['ONdrama','ON drama','ملخصات الأفلام والمسلسلات'],
-    ['HashtagEnt','Hashtag Ent','ملخصات الأفلام والمسلسلات'],
+    ['ondramaeg','ON drama','ملخصات الأفلام والمسلسلات'],
+    ['hashtagente','Hashtag Ent','ملخصات الأفلام والمسلسلات'],
     ['molakhasat7elwa','ملخصات حلوة','ملخصات الأفلام والمسلسلات'],
-    ['filmalmashy','فيلم ع الماشي','ملخصات الأفلام والمسلسلات'],
+    ['film3almashy2','فيلم ع الماشي','ملخصات الأفلام والمسلسلات'],
     ['molakhasataflam1','ملخصات أفلام','ملخصات الأفلام والمسلسلات'],
+    ['mohamednero','Mohammed Nero','ملخصات الأفلام والمسلسلات'],
+    ['ashrhalirecap','اشرحلي فيلم','ملخصات الأفلام والمسلسلات'],
+    ['-filmfeelmare5_official','فيلم في المريخ','ملخصات الأفلام والمسلسلات'],
 
     ['DawletElTlawa','دولة التلاوة','التلاوات القرآنية والابتهالات'],
-    ['UCzU3jMTL1mFb3Ql9g-pRn9A','إسلام صبحي','التلاوات القرآنية والابتهالات'],
-    ['UCB3EY4KFuHA5QCFeF4FCXJQ','مشاري راشد العفاسي','التلاوات القرآنية والابتهالات'],
-    ['UCSHJkcRBcVBQ8rb1e_3w9zg','ياسر الدوسري','التلاوات القرآنية والابتهالات'],
-    ['UCIiZpxs209kndl6lr34vBPw','ماهر المعيقلي','التلاوات القرآنية والابتهالات'],
-    ['UCtMXCP6VpGslunPH_n9d5JQ','عبد الباسط عبد الصمد','التلاوات القرآنية والابتهالات'],
-    ['UCeCrp7TiHatWJipMunlrr7g','محمد صديق المنشاوي','التلاوات القرآنية والابتهالات'],
-    ['UCCE0cKhbYQJwliQeAo1Lcaw','هزاع البلوشي','التلاوات القرآنية والابتهالات'],
-    ['UCJ_8KoQOwjrFF4jakh2QOsQ','أحمد النفيس','التلاوات القرآنية والابتهالات'],
-    ['UCiIh1zmHHntyDH_ngg1pLfg','فارس عباد','التلاوات القرآنية والابتهالات'],
-    ['UC8Mj0Pl-6HFBSo_94qEBJig','سعد الغامدي','التلاوات القرآنية والابتهالات'],
-    ['UCi8-4FbrwETQ-bBQj1DL0yw','إدريس أبكر','التلاوات القرآنية والابتهالات'],
-    ['UC0Yq158mUOviVNO2BiPjCAg','عبد الرحمن السديس','التلاوات القرآنية والابتهالات'],
-    ['SaudAlShuraim','سعود الشريم','التلاوات القرآنية والابتهالات'],
-    ['NasserAlQatami','ناصر القطامي','التلاوات القرآنية والابتهالات'],
-    ['KhalidAlJaleel','خالد الجليل','التلاوات القرآنية والابتهالات'],
-    ['RaadAlKurdi','رعد الكردي','التلاوات القرآنية والابتهالات'],
-    ['WadeeAlYamani','وديع اليمني','التلاوات القرآنية والابتهالات'],
-    ['AbdulrahmanMossad','عبد الرحمن مسعد','التلاوات القرآنية والابتهالات'],
-    ['SherifMostafa','شريف مصطفى','التلاوات القرآنية والابتهالات'],
-    ['OmarHishamAlArabi','عمر هشام العربي','التلاوات القرآنية والابتهالات'],
-    ['MohammedAlLuhaidan','محمد اللحيدان','التلاوات القرآنية والابتهالات'],
-    ['BandarBaleelah','بندر بليلة','التلاوات القرآنية والابتهالات'],
-    ['AlHussary','محمود خليل الحصري','التلاوات القرآنية والابتهالات'],
-    ['MustafaIsmail','مصطفى إسماعيل','التلاوات القرآنية والابتهالات'],
-    ['MohamedRefaat','محمد رفعت','التلاوات القرآنية والابتهالات'],
-    ['AlmajdQuran','قناة المجد للقرآن الكريم','التلاوات القرآنية والابتهالات'],
+    ['islam_sobhi','إسلام صبحي','التلاوات القرآنية والابتهالات'],
+    ['alafasy','مشاري راشد العفاسي','التلاوات القرآنية والابتهالات'],
+    ['yasseraldosry','ياسر الدوسري','التلاوات القرآنية والابتهالات'],
+    ['maheralmuaiqly','ماهر المعيقلي','التلاوات القرآنية والابتهالات'],
+    ['abdulbaasitabdussamad','عبد الباسط عبد الصمد','التلاوات القرآنية والابتهالات'],
+    ['elmenshawiofficial','محمد صديق المنشاوي','التلاوات القرآنية والابتهالات'],
+    ['hazzaalblushi','هزاع البلوشي','التلاوات القرآنية والابتهالات'],
+    ['ahmad_alnufais','أحمد النفيس','التلاوات القرآنية والابتهالات'],
+    ['faresabbad','فارس عباد','التلاوات القرآنية والابتهالات'],
+    ['sheikhsaadalghamdi','سعد الغامدي','التلاوات القرآنية والابتهالات'],
+    ['shuraym1414','سعود الشريم','التلاوات القرآنية والابتهالات'],
+    ['alqtami','ناصر القطامي','التلاوات القرآنية والابتهالات'],
+    ['khaledaljalilofficial','خالد الجليل','التلاوات القرآنية والابتهالات'],
+    ['radmohammad','رعد الكردي','التلاوات القرآنية والابتهالات'],
+    ['wadiealymni','وديع اليمني','التلاوات القرآنية والابتهالات'],
+    ['sherifmostafaofficial','شريف مصطفى','التلاوات القرآنية والابتهالات'],
+    ['omarhishamalarabi','عمر هشام العربي','التلاوات القرآنية والابتهالات'],
+    ['alluhaydan','محمد اللحيدان','التلاوات القرآنية والابتهالات'],
+    ['bandarbalilaah','بندر بليلة','التلاوات القرآنية والابتهالات'],
+    ['hosariofficial','محمود خليل الحصري','التلاوات القرآنية والابتهالات'],
+    ['shmostafaismail','مصطفى إسماعيل','التلاوات القرآنية والابتهالات'],
+    ['9li9','عبد الرحمن مسعد','التلاوات القرآنية والابتهالات'],
+    ['shrefaatofficial','محمد رفعت','التلاوات القرآنية والابتهالات'],
+    ['almajdquranchannelofficial','قناة المجد للقرآن الكريم','التلاوات القرآنية والابتهالات'],
     ['SaudiQuranTv','القرآن الكريم (بث من الحرم)','التلاوات القرآنية والابتهالات'],
     ['UCkdyjOzo6jkrM2tvC4pnx7A','أجمل تلاوات القرآن الكريم','التلاوات القرآنية والابتهالات'],
     ['Quran_Ruqyah_Live','الرقية الشرعية مباشر','التلاوات القرآنية والابتهالات'],
 
-    ['JoeHaTTab','جو حطاب','السفر والمغامرات والرحلات'],
-    ['UC5yl8uedGsQBBGn3B7IF0eA','ابن حتوتة','السفر والمغامرات والرحلات'],
-    ['KareemElsayed','كريم السيد','السفر والمغامرات والرحلات'],
-    ['OmarFarooq','عمر فاروق','السفر والمغامرات والرحلات'],
+    ['joehattab','جو حطاب','السفر والمغامرات والرحلات'],
+    ['ibnhattuta','ابن حتوتة','السفر والمغامرات والرحلات'],
+    ['kareemelsayedvlogs','كريم السيد','السفر والمغامرات والرحلات'],
+    ['omr94','عمر فاروق','السفر والمغامرات والرحلات'],
     ['IbnHattutaTravels','قاسم الحتو','السفر والمغامرات والرحلات'],
-    ['Khabib','خبيب','السفر والمغامرات والرحلات'],
-    ['UCTQFFTSqy5VCmAYirXXGiAg','رحاليستا','السفر والمغامرات والرحلات'],
-    ['UC_pWMQsAiI6cxSs6E9cOFxA','قاسم حداد','السفر والمغامرات والرحلات'],
-    ['UCsMwmbSjoNF-NWFp5Zs7QIw','سعود الكندري','السفر والمغامرات والرحلات'],
-    ['Haggagovic','حجاجوفيتش','السفر والمغامرات والرحلات'],
-    ['AliGhozlan','علي غزلان','السفر والمغامرات والرحلات'],
-    ['AbdullahAlJuma','عبد الله الجمعة','السفر والمغامرات والرحلات'],
-    ['AhmedElBadawy','أحمد البدوي','السفر والمغامرات والرحلات'],
-    ['MahmoudSarhan','محمود سرحان','السفر والمغامرات والرحلات'],
-    ['UCEpr3HC0OmIPUQ-2XbTELPQ','سافر مع عزة','السفر والمغامرات والرحلات'],
-    ['UC9KzLTLzh1intBwIulPQKlA','يوسف عهدي','السفر والمغامرات والرحلات'],
+    ['khoubai','خبيب','السفر والمغامرات والرحلات'],
+    ['rahalista','رحاليستا','السفر والمغامرات والرحلات'],
+    ['saudlkandiri','سعود الكندري','السفر والمغامرات والرحلات'],
+    ['haggagovic','حجاجوفيتش','السفر والمغامرات والرحلات'],
+    ['ahmedelbadawy1','أحمد البدوي','السفر والمغامرات والرحلات'],
     ['RouguiAdventures','مغامرات الروقي','السفر والمغامرات والرحلات'],
-    ['AbdullahHijazi','الحياة في أمريكا','السفر والمغامرات والرحلات'],
-    ['UC5GjfpCXKB4D3FkyZjHRySw','رحلة 4K','السفر والمغامرات والرحلات'],
-    ['UCEAalZ7fWFFLj4Y4AKSe4RA','الصوري','السفر والمغامرات والرحلات'],
-    ['UC3Vw9hV8YYrpksbXK2xz3gg','محمد عبد اللطيف','السفر والمغامرات والرحلات'],
-    ['UChgoWndUM5i99N_i-cxZYOA','بلال الحسيني','السفر والمغامرات والرحلات'],
-    ['UCZoCGfPJOfRDSYNof4tvWiA','محمد حجازي','السفر والمغامرات والرحلات'],
+    ['alsurii','الصوري','السفر والمغامرات والرحلات'],
+    ['ahmedmoharam','أحمد محرم','السفر والمغامرات والرحلات'],
     ['AlJazeeraTravel','برنامج المسافر (الجزيرة)','السفر والمغامرات والرحلات'],
 
     ['UCF7IOceliTr_6HQfPrUBwZw','الشيف شاهين','الطبخ والأكل وتجارب المطاعم'],
@@ -266,13 +257,15 @@
     'الألعاب والجيمينج':'الألعاب',
     'ملخصات الأنمي':'الأنمي',
     'البرمجة والتكنولوجيا وتطوير الذات':'التقنية',
-    'الثقافة والعلوم والتاريخ':'العلوم'
+    'الثقافة والعلوم والتاريخ':'العلوم',
+    'الأخبار والاقتصاد والتحليل':'الأخبار'
   };
-  var MAIN = ['الأفلام والمسلسلات','الرياضة','الألعاب','الأنمي','التقنية','العلوم'];
+  var MAIN = ['الأفلام والمسلسلات','الرياضة','الألعاب','الأنمي','التقنية','العلوم','الأخبار'];
   function groupOf(sec){ return GROUP[sec] || 'المزيد'; }
 
   var HOURS = 12, PARTIAL_HOURS = 1, YT = [], base = null, FAILED = [], CHANS = [], CHF = 'الكل';
   var SHORTS = [], SHORT_IDS = {}, CHI = -1;
+  var STATS = {total:0, ok:0, small:0, failed:0};
 
   // ---------- الستايل ----------
   var css = '' +
@@ -312,7 +305,10 @@
     '.cs-follow.on{background:#19191F;border-color:#7C3AED}' +
     '.cs-login{display:flex;gap:8px;align-items:center;justify-content:space-between;background:#19191F;border:1px solid #2a2a33;border-radius:14px;padding:10px 12px;margin:4px 0 14px}' +
     '.cs-login input{flex:1;min-width:0;background:#0f0f14;color:#fff;border:1px solid #2a2a33;border-radius:10px;padding:9px 10px;font-size:14px}' +
-    '.cs-login button{background:#7C3AED;color:#fff;border:0;border-radius:10px;padding:9px 14px;cursor:pointer}';
+    '.cs-login button{background:#7C3AED;color:#fff;border:0;border-radius:10px;padding:9px 14px;cursor:pointer}' +
+    '.cs-short{display:block;width:100%;aspect-ratio:9/16;border:0;border-radius:14px;background-color:#19191F;background-size:cover;background-position:center;cursor:pointer;padding:0}' +
+    '.cs-st{font-size:13px;margin-top:6px;line-height:1.4;text-align:right}' +
+    '.cs-cnt{font-size:13px;color:#9a9aa5;margin:0 0 10px;line-height:1.8}';
 
   // ألوان وأيقونات الأقسام (زي الصورة)
   var CAT_STYLE = {
@@ -322,6 +318,7 @@
     'الأنمي':['#ea580c','#431407','🍥'],
     'التقنية':['#0891b2','#083344','💻'],
     'العلوم':['#4f46e5','#1e1b4b','🔭'],
+    'الأخبار':['#b91c1c','#3f0d0d','📰'],
     'شورتس':['#E50914','#450a0a','▶'],
     'المزيد':['#525252','#171717','✦']
   };
@@ -386,6 +383,7 @@
   function byDate(a, b){ return a.date < b.date ? 1 : a.date > b.date ? -1 : 0; }
 
   function build(res){
+    RND = null;
     CHANS = [];
     YT.length = 0;
     SHORTS = [];
@@ -396,7 +394,11 @@
       r.v.forEach(function(x){ YT.push(x); });
       (r.sh || []).forEach(function(x){ SHORTS.push(x); SHORT_IDS[x.vid] = true; });
     });
-    YT.sort(byDate);
+    // خلط عشوائي لفيديوهات الرئيسية (بيتغير مع كل تحميل جديد)
+    for(var i = YT.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = YT[i]; YT[i] = YT[j]; YT[j] = t;
+    }
     SHORTS.sort(byDate);
     window.CHANNELS = CHANS.map(function(c){ return {name:c.name, ini:c.ini, blurb:c.group}; });
   }
@@ -476,16 +478,39 @@
   }
 
   // ---------- الرئيسية ----------
+  // كارت الشورت: طولي 9:16 والصورة المصغرة تتقص على العمود الأوسط (من غير الخلفية السودا)
+  function shortCard(v){
+    return '<button class="cs-short" style="background:' + (v.bg || '#19191F') + '" onclick="play(\'' + v.id + '\')"></button>' +
+      '<div class="cs-st">' + esc(v.title) + '</div>';
+  }
   function tile(v){
     var bg = v.bg || '#19191F';
     return '<button class="cs-tile" style="background:' + bg + ';border:0;padding:0;cursor:pointer" onclick="play(\'' + v.id + '\')">' +
       '<span class="cs-dur">' + esc(v.ch || '') + '</span></button>' +
       '<div style="font-size:13px;margin-top:6px;line-height:1.4;text-align:right">' + esc(v.title) + '</div>';
   }
+  // قنوات عشوائية في الرئيسية (بتتختار مرة واحدة لكل تحميل للتطبيق)
+  var RND = null;
+  function randChans(){
+    if(!RND){
+      var a = CHANS.slice();
+      for(var i = a.length - 1; i > 0; i--){
+        var j = Math.floor(Math.random() * (i + 1));
+        var t = a[i]; a[i] = a[j]; a[j] = t;
+      }
+      RND = a.slice(0, 8);
+    }
+    if(!RND.length) return '';
+    return '<div class="cs-secttl"><span>قنوات عشوائية</span></div><div class="cs-grid">' +
+      RND.map(function(c){
+        var av = c.img ? '<img src="' + c.img + '" alt="">' : esc(c.ini);
+        return '<button class="cs-ch cs-chbtn" onclick="csChan(' + CHANS.indexOf(c) + ')"><span class="cs-sq" style="background:' + catBg(c.group) + '">' + av + '</span><b>' + esc(c.name) + '</b></button>';
+      }).join('') + '</div>';
+  }
   SCR.home = function(){
     var movies = window.vids().filter(function(v){ return String(v.id).indexOf('yt-') !== 0; });
     var reg = YT.filter(function(x){ return !SHORT_IDS[x.vid]; });
-    var s = loginHtml() + followHtml();
+    var s = loginHtml() + followHtml() + randChans();
     // البانر الرئيسي: أحدث فيديو
     var h = reg[0] || movies[0];
     if(h){
@@ -507,7 +532,7 @@
         '<span class="cs-ico">' + catIco(g) + '</span><b>' + esc(g) + '</b></button>';
     }).join('');
     s += '<div class="cs-secttl"><span>الأقسام</span></div><div class="cs-cats">' + cats + '</div>';
-    if(SHORTS.length) s += sec('شورتس', row(SHORTS.slice(0, 12), vcard));
+    if(SHORTS.length) s += sec('شورتس', row(SHORTS.slice(0, 12), shortCard));
     MAIN.forEach(function(g){
       var vs = reg.filter(function(x){ return x.grp === g; }).slice(0, 12);
       if(vs.length) s += sec(esc(g), row(vs, vcard));
@@ -539,7 +564,12 @@
       return '<button class="cs-ch cs-chbtn cs-sqw" onclick="csChan(' + CHANS.indexOf(c) + ')"><span class="cs-sq" style="background:' + catBg(c.group) + '">' + av + '</span><b>' + esc(c.name) + '</b></button>';
     }).join('');
     if(!CHANS.length) return '<p style="text-align:center;color:#9a9aa5">جاري تحميل القنوات...</p>';
-    return '<div class="cs-chips">' + chips + '</div><div class="cs-grid">' + grid + '</div>';
+    var movRaw = CH.filter(function(c){ return c[2] === 'ملخصات الأفلام والمسلسلات'; }).length;
+    var movOk = CHANS.filter(function(c){ return c.sec === 'ملخصات الأفلام والمسلسلات'; }).length;
+    var cnt = '<p class="cs-cnt">القنوات في الكود: ' + STATS.total + ' · اتحملت: ' + STATS.ok +
+      ' · أقل من ١٠٠ ألف: ' + STATS.small + ' · فشلت: ' + STATS.failed +
+      '<br>قنوات الأفلام: اتحملت ' + movOk + ' من ' + movRaw + '</p>';
+    return cnt + '<div class="cs-chips">' + chips + '</div><div class="cs-grid">' + grid + '</div>';
   };
 
   // ---------- الأنواع (بتتعرف من العنوان أو بيانات Firestore تلقائياً) ----------
@@ -577,7 +607,7 @@
       ? SHORTS
       : window.vids().filter(function(v){ return !SHORT_IDS[v.vid] && matchGenre(v, S.cat); });
     var body = list.length
-      ? '<div class="cs-grid2">' + list.map(vcard).join('') + '</div>'
+      ? '<div class="cs-grid2">' + list.map(S.cat === 'شورتس' ? shortCard : vcard).join('') + '</div>'
       : '<p style="text-align:center;color:#9a9aa5;padding:30px 0">مفيش فيديوهات في ' + esc(S.cat) + ' لسه</p>';
     return '<button class="cs-back" onclick="go(\'home\')">رجوع</button>' + sec(esc(S.cat), body);
   };
@@ -601,21 +631,24 @@
       ? '<div class="cs-grid2">' + A.v.map(vcard).join('') + '</div>'
       : '<p style="text-align:center;color:#9a9aa5;padding:20px 0">مفيش فيديوهات لسه</p>';
     if(A.sh.length){
-      body += '<div class="cs-secttl"><span>الشورتس (' + A.sh.length + ')</span></div><div class="cs-grid2">' + A.sh.map(vcard).join('') + '</div>';
+      body += '<div class="cs-secttl"><span>الشورتس (' + A.sh.length + ')</span></div><div class="cs-grid2">' + A.sh.map(shortCard).join('') + '</div>';
     }
     return back + head + body;
   };
 
   // ---------- التحميل والكاش ----------
-  function apply(res){
+  function apply(res, failed){
     build(res);
+    var ok = res.filter(Boolean).length;
+    failed = failed || 0;
+    STATS = {total: CH.length, ok: ok, failed: failed, small: CH.length - ok - failed};
     try{ render(); }catch(e){}
   }
   var cached = null;
   try{ cached = JSON.parse(localStorage.getItem('ytc8') || 'null'); }catch(e){}
   if(cached){
     var ttl = (cached.f ? PARTIAL_HOURS : HOURS) * 3600000;
-    if(Date.now() - cached.t < ttl){ apply(cached.d); return; }
+    if(Date.now() - cached.t < ttl){ apply(cached.d, cached.f); return; }
   }
   var seen = [];
   var UNIQUE = RAW.filter(function(c){
@@ -623,7 +656,7 @@
     seen.push(c[0]); return true;
   });
   Promise.all(UNIQUE.map(function(c){ return load(c, 0); })).then(function(res){
-    apply(res);
+    apply(res, FAILED.length);
     try{ localStorage.setItem('ytc8', JSON.stringify({t:Date.now(), d:res, f:FAILED.length})); }catch(e){}
   });
 })();
